@@ -1,0 +1,1 @@
+function newCompetition(){alert('Demo only: competition creation will need a database and protected admin login.')}function manage(name){alert('Demo management opened for '+name+'. No live records are connected.')}
