@@ -103,7 +103,7 @@ loginForm.addEventListener('submit', async (event) => {
     const captchaToken = document.querySelector(
   '[name="cf-turnstile-response"]'
 )?.value;
-
+console.log('Turnstile token:', captchaToken);
 if (!captchaToken) {
   loginMessage.textContent =
     'Please complete the security verification first.';
