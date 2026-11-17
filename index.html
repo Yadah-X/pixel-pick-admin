@@ -4,24 +4,36 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Pixel Pick Admin</title>
+
   <link rel="stylesheet" href="style.css">
+
+  <!-- Cloudflare Turnstile security verification -->
   <script
-  src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-  defer
-></script>
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    defer
+  ></script>
 </head>
+
 <body>
 
+  <!-- ADMIN LOGIN -->
   <section id="loginScreen" class="login-screen">
     <div class="login-card">
+
       <div class="logo">PIXEL<span>PICK</span></div>
+
       <p class="muted">ADMIN CONSOLE</p>
+
       <h1>Administrator login</h1>
+
       <p>Sign in using your existing Pixel Pick account.</p>
 
       <form id="loginForm">
+
         <label for="email">Email address</label>
+
         <input
           id="email"
           type="email"
@@ -30,6 +42,7 @@
         >
 
         <label for="password">Password</label>
+
         <input
           id="password"
           type="password"
@@ -37,109 +50,220 @@
           required
         >
 
-        <button id="loginButton" class="primary" type="submit">
-          <div
-  class="cf-turnstile"
-  data-sitekey="0x4AAAAAAF-RWWgVowvnilq4"
-></div>
+        <!-- Cloudflare Turnstile verification -->
+        <div
+          class="cf-turnstile"
+          data-sitekey="0x4AAAAAAF-RWWgVowvnilq4"
+        ></div>
+
+        <!-- Sign in button -->
+        <button
+          id="loginButton"
+          class="primary"
+          type="submit"
+        >
           Sign in
         </button>
 
-        <p id="loginMessage" class="message" role="status"></p>
+        <p
+          id="loginMessage"
+          class="message"
+          role="status"
+        ></p>
+
       </form>
     </div>
   </section>
 
+
+  <!-- ADMIN DASHBOARD -->
   <div id="adminApp" class="layout" hidden>
+
+    <!-- SIDEBAR -->
     <aside>
+
       <div class="logo">PIXEL<span>PICK</span></div>
+
       <p class="muted">ADMIN CONSOLE</p>
 
       <nav>
         <a class="active" href="#dashboard">Dashboard</a>
+
         <a href="#competitions">Competitions</a>
+
         <a href="#entries">Entries</a>
+
         <a href="#payments">Payments</a>
+
         <a href="#customers">Customers</a>
+
         <a href="#results">Challenge results</a>
+
         <a href="#referrals">Referrals</a>
+
         <a href="#winners">Winners</a>
+
         <a href="#support">Customer support</a>
       </nav>
 
-      <button id="logoutButton" class="logout-button">
+      <button
+        id="logoutButton"
+        class="logout-button"
+        type="button"
+      >
         Log out
       </button>
+
     </aside>
 
+
+    <!-- MAIN DASHBOARD CONTENT -->
     <main>
+
       <header>
+
         <div>
           <p class="muted">CONTROL CENTRE</p>
+
           <h1>Dashboard</h1>
+
           <p id="adminEmail" class="muted"></p>
         </div>
-        <span class="admin-status">ADMIN ACCESS</span>
+
+        <span class="admin-status">
+          ADMIN ACCESS
+        </span>
+
       </header>
 
+
+      <!-- DASHBOARD OVERVIEW -->
       <section id="dashboard" class="panel">
+
         <h2>Welcome to Pixel Pick Admin</h2>
+
         <p>
           Your administrator login is connected.
           Live business records will be connected in the next stage.
         </p>
+
         <div id="connectionStatus" class="notice">
           Checking administrator access...
         </div>
+
       </section>
 
+
+      <!-- COMPETITIONS -->
       <section class="panel" id="competitions">
+
         <h2>Competitions</h2>
-        <p>Competition creation and management will be connected next.</p>
+
+        <p>
+          Competition creation and management will be connected next.
+        </p>
+
       </section>
 
+
+      <!-- ENTRIES -->
       <section class="panel" id="entries">
+
         <h2>Entries</h2>
-        <p>Customer entry records are not connected yet.</p>
+
+        <p>
+          Customer entry records are not connected yet.
+        </p>
+
       </section>
 
+
+      <!-- PAYMENTS -->
       <section class="panel" id="payments">
+
         <h2>Payments</h2>
-        <p>Verified PayFast payment records are not connected yet.</p>
+
+        <p>
+          Verified PayFast payment records are not connected yet.
+        </p>
+
       </section>
 
+
+      <!-- CUSTOMERS -->
       <section class="panel" id="customers">
+
         <h2>Customers</h2>
-        <p>Customer records are not connected yet.</p>
+
+        <p>
+          Customer records are not connected yet.
+        </p>
+
       </section>
 
+
+      <!-- CHALLENGE RESULTS -->
       <section class="panel" id="results">
+
         <h2>Challenge results</h2>
-        <p>Challenge attempts and scores are not connected yet.</p>
+
+        <p>
+          Challenge attempts and scores are not connected yet.
+        </p>
+
       </section>
 
+
+      <!-- REFERRALS -->
       <section class="panel" id="referrals">
+
         <h2>Referrals</h2>
-        <p>Referral records and rewards are not connected yet.</p>
+
+        <p>
+          Referral records and rewards are not connected yet.
+        </p>
+
       </section>
 
+
+      <!-- WINNERS -->
       <section class="panel" id="winners">
+
         <h2>Winners</h2>
-        <p>Winner review and approval are not connected yet.</p>
+
+        <p>
+          Winner review and approval are not connected yet.
+        </p>
+
       </section>
 
+
+      <!-- CUSTOMER SUPPORT -->
       <section class="panel" id="support">
+
         <h2>Customer support</h2>
-        <p>Customer enquiries are not connected yet.</p>
+
+        <p>
+          Customer enquiries are not connected yet.
+        </p>
+
       </section>
+
 
       <p class="footer-note">
         Pixel Pick Admin — authorised administrator access only.
       </p>
+
     </main>
+
   </div>
 
+
+  <!-- SUPABASE CONNECTION -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- ADMIN JAVASCRIPT -->
   <script src="script.js"></script>
+
 </body>
 </html>
