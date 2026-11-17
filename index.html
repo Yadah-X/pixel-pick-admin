@@ -1,1 +1,137 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pixel Pick Admin</title><link rel="stylesheet" href="style.css"></head><body><div class="layout"><aside><div class="logo">PIXEL<span>PICK</span></div><p class="muted">ADMIN CONSOLE</p><a class="active" href="#">Dashboard</a><a href="#competitions">Competitions</a><a href="#entries">Entries</a><a href="#winners">Winners</a><a href="#settings">Settings</a><button onclick="alert('Demo logout only')">Log out</button></aside><main><header><div><p class="muted">CONTROL CENTRE</p><h1>Dashboard</h1></div><button class="primary" onclick="newCompetition()">+ New competition</button></header><section class="stats"><div><span>Revenue</span><b>R18,450</b><small>Demo data</small></div><div><span>Entries</span><b>738</b><small>Demo data</small></div><div><span>Active</span><b>3</b><small>Competitions</small></div><div><span>Winners</span><b>12</b><small>Demo data</small></div></section><section class="panel" id="competitions"><div class="panelhead"><h2>Competitions</h2><button onclick="newCompetition()">Create</button></div><table><thead><tr><th>Competition</th><th>Entry</th><th>Entries</th><th>Status</th><th></th></tr></thead><tbody><tr><td>iPhone 17 Pro Max</td><td>R25</td><td>412</td><td><i class="live">DEMO</i></td><td><button onclick="manage('iPhone 17 Pro Max')">Manage</button></td></tr><tr><td>Limited Sneaker Drop</td><td>R15</td><td>218</td><td><i class="live">DEMO</i></td><td><button onclick="manage('Limited Sneaker Drop')">Manage</button></td></tr><tr><td>AirPods Pro</td><td>R10</td><td>108</td><td><i class="live">DEMO</i></td><td><button onclick="manage('AirPods Pro')">Manage</button></td></tr></tbody></table></section><section class="panel" id="entries"><h2>Recent entries</h2><p class="muted">Real customer records, payments and authentication are not connected.</p></section><p class="warning">Prototype only. This admin page has no login protection and must not be used for real customer data.</p></main></div><script src="script.js"></script></body></html>
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pixel Pick Admin</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <section id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <div class="logo">PIXEL<span>PICK</span></div>
+      <p class="muted">ADMIN CONSOLE</p>
+      <h1>Administrator login</h1>
+      <p>Sign in using your existing Pixel Pick account.</p>
+
+      <form id="loginForm">
+        <label for="email">Email address</label>
+        <input
+          id="email"
+          type="email"
+          autocomplete="username"
+          required
+        >
+
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          required
+        >
+
+        <button id="loginButton" class="primary" type="submit">
+          Sign in
+        </button>
+
+        <p id="loginMessage" class="message" role="status"></p>
+      </form>
+    </div>
+  </section>
+
+  <div id="adminApp" class="layout" hidden>
+    <aside>
+      <div class="logo">PIXEL<span>PICK</span></div>
+      <p class="muted">ADMIN CONSOLE</p>
+
+      <nav>
+        <a class="active" href="#dashboard">Dashboard</a>
+        <a href="#competitions">Competitions</a>
+        <a href="#entries">Entries</a>
+        <a href="#payments">Payments</a>
+        <a href="#customers">Customers</a>
+        <a href="#results">Challenge results</a>
+        <a href="#referrals">Referrals</a>
+        <a href="#winners">Winners</a>
+        <a href="#support">Customer support</a>
+      </nav>
+
+      <button id="logoutButton" class="logout-button">
+        Log out
+      </button>
+    </aside>
+
+    <main>
+      <header>
+        <div>
+          <p class="muted">CONTROL CENTRE</p>
+          <h1>Dashboard</h1>
+          <p id="adminEmail" class="muted"></p>
+        </div>
+        <span class="admin-status">ADMIN ACCESS</span>
+      </header>
+
+      <section id="dashboard" class="panel">
+        <h2>Welcome to Pixel Pick Admin</h2>
+        <p>
+          Your administrator login is connected.
+          Live business records will be connected in the next stage.
+        </p>
+        <div id="connectionStatus" class="notice">
+          Checking administrator access...
+        </div>
+      </section>
+
+      <section class="panel" id="competitions">
+        <h2>Competitions</h2>
+        <p>Competition creation and management will be connected next.</p>
+      </section>
+
+      <section class="panel" id="entries">
+        <h2>Entries</h2>
+        <p>Customer entry records are not connected yet.</p>
+      </section>
+
+      <section class="panel" id="payments">
+        <h2>Payments</h2>
+        <p>Verified PayFast payment records are not connected yet.</p>
+      </section>
+
+      <section class="panel" id="customers">
+        <h2>Customers</h2>
+        <p>Customer records are not connected yet.</p>
+      </section>
+
+      <section class="panel" id="results">
+        <h2>Challenge results</h2>
+        <p>Challenge attempts and scores are not connected yet.</p>
+      </section>
+
+      <section class="panel" id="referrals">
+        <h2>Referrals</h2>
+        <p>Referral records and rewards are not connected yet.</p>
+      </section>
+
+      <section class="panel" id="winners">
+        <h2>Winners</h2>
+        <p>Winner review and approval are not connected yet.</p>
+      </section>
+
+      <section class="panel" id="support">
+        <h2>Customer support</h2>
+        <p>Customer enquiries are not connected yet.</p>
+      </section>
+
+      <p class="footer-note">
+        Pixel Pick Admin — authorised administrator access only.
+      </p>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+</body>
+</html>
