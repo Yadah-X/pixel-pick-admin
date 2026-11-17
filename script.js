@@ -132,9 +132,11 @@ const { error } = await supabaseClient.auth.signInWithPassword({
       'Could not connect. Please try again.';
 
     console.error(error);
-  } finally {
+    } finally {
     loginButton.disabled = false;
     loginButton.textContent = 'Sign in';
+
+    window.turnstile?.reset();
   }
 });
 
