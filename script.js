@@ -100,10 +100,23 @@ loginForm.addEventListener('submit', async (event) => {
   const password = document.getElementById('password').value;
 
   try {
-    const { error } = await supabaseClient.auth.signInWithPassword({
-      email,
-      password
-    });
+    const captchaToken = document.querySelector(
+  '[name="cf-turnstile-response"]'
+)?.value;
+
+if (!captchaToken) {
+  loginMessage.textContent =
+    'Please complete the security verification first.';
+  return;
+}
+
+const { error } = await supabaseClient.auth.signInWithPassword({
+  email,
+  password,
+  options: {
+    captchaToken
+  }
+});
 
     if (error) {
       loginMessage.textContent =
