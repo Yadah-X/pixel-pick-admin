@@ -107,7 +107,7 @@ loginForm.addEventListener('submit', async (event) => {
 
     if (error) {
       loginMessage.textContent =
-        'Sign-in failed. Please check your email and password.';
+  error.message || 'Unknown sign-in error';
 
       console.error('Login error:', error);
     } else {
