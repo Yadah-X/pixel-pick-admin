@@ -10,10 +10,10 @@
   <link rel="stylesheet" href="style.css">
 
   <!-- Cloudflare Turnstile security verification -->
-  <script
-    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-    defer
-  ></script>
+ <script
+  src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit"
+  defer
+></script>
 </head>
 
 <body>
@@ -51,10 +51,7 @@
         >
 
         <!-- Cloudflare Turnstile verification -->
-        <div
-          class="cf-turnstile"
-          data-sitekey="0x4AAAAAAF-RWWgVowvnilq4"
-        ></div>
+        <div id="pixelPickTurnstile"></div>
 
         <!-- Sign in button -->
         <button
