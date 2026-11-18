@@ -1831,6 +1831,151 @@ function formatCompletionTime(milliseconds) {
 
   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 }
+// ==========================================
+// INDIVIDUAL CHALLENGE ATTEMPT DETAILS
+// ==========================================
+
+async function loadChallengeAttemptDetails(attemptId) {
+  attemptDetailsPanel.classList.remove('hidden');
+
+  attemptDetailsSubtitle.textContent =
+    'Loading individual challenge answers...';
+
+  attemptDetailsTableBody.innerHTML = `
+    <tr>
+      <td colspan="7" class="empty-state">
+        Loading answers...
+      </td>
+    </tr>
+  `;
+
+  showMessage(attemptDetailsMessage, '');
+
+  const { data, error } = await supabaseClient.rpc(
+    'get_admin_challenge_attempt_details',
+    {
+      p_attempt_id: attemptId
+    }
+  );
+
+  if (error) {
+    console.error('Attempt details error:', error);
+
+    showMessage(
+      attemptDetailsMessage,
+      'Unable to load attempt details: ' + error.message
+    );
+
+    attemptDetailsTableBody.innerHTML = `
+      <tr>
+        <td colspan="7" class="empty-state">
+          Could not load individual answers.
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  const details = data || [];
+
+  attemptDetailsSubtitle.textContent =
+    `${details.length} challenge tasks in this attempt`;
+
+  if (details.length === 0) {
+    attemptDetailsTableBody.innerHTML = `
+      <tr>
+        <td colspan="7" class="empty-state">
+          No task details found.
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  attemptDetailsTableBody.innerHTML = details.map(task => {
+    let resultText = 'Not answered';
+    let resultClass = '';
+
+    if (task.is_correct === true) {
+      resultText = 'Correct';
+      resultClass = 'success';
+    } else if (task.is_correct === false) {
+      resultText = 'Incorrect';
+      resultClass = 'danger';
+    }
+
+    return `
+      <tr>
+        <td>${escapeHtml(task.task_number ?? '—')}</td>
+        <td>${escapeHtml(task.instruction || 'No instruction available')}</td>
+        <td>${escapeHtml(task.selected_answer_key || 'Not answered')}</td>
+        <td>${escapeHtml(task.correct_answer_key || '—')}</td>
+        <td>
+          <span class="status-badge ${resultClass}">
+            ${resultText}
+          </span>
+        </td>
+        <td>${escapeHtml(task.points_awarded ?? 0)}</td>
+        <td>
+          ${task.answered_at
+            ? escapeHtml(formatDate(task.answered_at))
+            : '—'}
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  showMessage(attemptDetailsMessage, 'Challenge answers loaded successfully.', true);
+}
+
+
+// ==========================================
+// CHALLENGE RESULTS EVENT LISTENERS
+// ==========================================
+
+// Search results
+resultsSearch.addEventListener('input', renderChallengeResults);
+
+// Filter by competition
+resultsCompetitionFilter.addEventListener('change', renderChallengeResults);
+
+// Filter by attempt status
+resultsStatusFilter.addEventListener('change', renderChallengeResults);
+
+// Refresh results
+document.getElementById('refreshResultsButton')
+  .addEventListener('click', loadAdminChallengeResults);
+
+// Clear filters
+document.getElementById('clearResultsFiltersButton')
+  .addEventListener('click', () => {
+    resultsSearch.value = '';
+    resultsCompetitionFilter.value = '';
+    resultsStatusFilter.value = '';
+
+    renderChallengeResults();
+  });
+
+// View individual answers
+resultsTableBody.addEventListener('click', event => {
+  const button = event.target.closest('[data-view-attempt]');
+
+  if (!button) {
+    return;
+  }
+
+  const attemptId = button.dataset.viewAttempt;
+
+  loadChallengeAttemptDetails(attemptId);
+});
+
+// Close individual answers
+document.getElementById('closeAttemptDetailsButton')
+  .addEventListener('click', () => {
+    attemptDetailsPanel.classList.add('hidden');
+  });
 // ------------------------------------------------------
 // INITIAL STARTUP
 // ------------------------------------------------------
