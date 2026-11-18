@@ -1809,7 +1809,7 @@ function renderChallengeResults() {
         <td>${escapeHtml(item.correct_answers ?? 0)}</td>
         <td>${escapeHtml(item.accuracy ?? 0)}%</td>
         <td>
-          <span class="status-badge ${escapeHtml(getStatusClass(status))}">
+          <span class="status-badge ${escapeHtml(getChallengeResultStatusClass(status))}">
             ${escapeHtml(status.replace('_', ' '))}
           </span>
         </td>
