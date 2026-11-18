@@ -19,6 +19,7 @@ let competitionsCache = [];
 let productsCache = [];
 let entriesCache = [];
 let paymentsCache = [];
+let challengeResultsCache = [];
 let currentAdmin = null;
 
 // ------------------------------------------------------
