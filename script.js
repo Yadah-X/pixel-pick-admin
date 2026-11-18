@@ -1701,9 +1701,11 @@ async function loadAdminChallengeResults() {
 
   challengeResultsCache = data || [];
 
-  updateChallengeResultStats();
+    updateChallengeResultStats();
   populateResultsCompetitionFilter();
   renderChallengeResults();
+
+  showMessage(resultsMessage, 'Challenge results loaded successfully.');
 }
 
 function updateChallengeResultStats() {
