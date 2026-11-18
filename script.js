@@ -70,6 +70,21 @@ const entriesPaidCount = document.getElementById('entriesPaidCount');
 const entriesPendingCount = document.getElementById('entriesPendingCount');
 
 // ------------------------------------------------------
+// PAYMENTS MANAGEMENT ELEMENTS
+// ------------------------------------------------------
+
+const paymentsTableBody = document.getElementById('paymentsTableBody');
+const paymentsMessage = document.getElementById('paymentsMessage');
+const paymentsSearch = document.getElementById('paymentsSearch');
+const paymentsStatusFilter = document.getElementById('paymentsStatusFilter');
+const paymentsResultCount = document.getElementById('paymentsResultCount');
+
+const paymentsTotalCount = document.getElementById('paymentsTotalCount');
+const paymentsPaidCount = document.getElementById('paymentsPaidCount');
+const paymentsPendingCount = document.getElementById('paymentsPendingCount');
+const paymentsRevenueTotal = document.getElementById('paymentsRevenueTotal');
+
+// ------------------------------------------------------
 // CLOUDFLARE TURNSTILE
 // ------------------------------------------------------
 
