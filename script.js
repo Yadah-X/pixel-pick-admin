@@ -18,6 +18,7 @@ let turnstileWidgetId = null;
 let competitionsCache = [];
 let productsCache = [];
 let entriesCache = [];
+let paymentsCache = [];
 let currentAdmin = null;
 
 // ------------------------------------------------------
