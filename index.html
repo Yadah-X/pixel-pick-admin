@@ -427,9 +427,178 @@
   </div>
 </section>
 
-      <section id="section-results" class="page-section hidden">
-        <div class="panel"><h2>Challenge results</h2><p>This section will be connected in the next development stage.</p></div>
-      </section>
+     
+<!-- CHALLENGE RESULTS -->
+<section id="section-results" class="page-section hidden">
+
+  <div class="section-heading">
+    <div>
+      <h2>Challenge results</h2>
+      <p class="muted">Monitor customer attempts, scores and individual challenge answers.</p>
+    </div>
+
+    <button id="refreshResultsButton" class="primary-button" type="button">
+      Refresh results
+    </button>
+  </div>
+
+  <!-- RESULT STATISTICS -->
+  <div class="stat-grid">
+    <article class="stat-card">
+      <span>Total attempts</span>
+      <strong id="resultsTotalCount">—</strong>
+    </article>
+
+    <article class="stat-card">
+      <span>Submitted</span>
+      <strong id="resultsSubmittedCount">—</strong>
+    </article>
+
+    <article class="stat-card">
+      <span>In progress</span>
+      <strong id="resultsInProgressCount">—</strong>
+    </article>
+
+    <article class="stat-card">
+      <span>Disqualified</span>
+      <strong id="resultsDisqualifiedCount">—</strong>
+    </article>
+  </div>
+
+  <p id="resultsMessage" class="message" role="status"></p>
+
+  <!-- SEARCH AND FILTERS -->
+  <div class="panel">
+
+    <div class="section-heading">
+      <div>
+        <h3>Customer challenge attempts</h3>
+        <p class="muted">Search and filter actual challenge attempts.</p>
+      </div>
+    </div>
+
+    <div class="form-grid">
+
+      <div>
+        <label for="resultsSearch">Search attempts</label>
+        <input
+          id="resultsSearch"
+          type="search"
+          placeholder="Search customer or competition..."
+        >
+      </div>
+
+      <div>
+        <label for="resultsCompetitionFilter">Competition</label>
+        <select id="resultsCompetitionFilter">
+          <option value="">All competitions</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="resultsStatusFilter">Attempt status</label>
+        <select id="resultsStatusFilter">
+          <option value="">All statuses</option>
+          <option value="submitted">Submitted</option>
+          <option value="in_progress">In progress</option>
+          <option value="disqualified">Disqualified</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div class="table-heading">
+      <p id="resultsResultCount" class="muted">Loading results...</p>
+
+      <button
+        id="clearResultsFiltersButton"
+        class="secondary-button"
+        type="button"
+      >
+        Clear filters
+      </button>
+    </div>
+
+    <!-- RESULTS TABLE -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Competition</th>
+            <th>Entry number</th>
+            <th>Score</th>
+            <th>Correct answers</th>
+            <th>Accuracy</th>
+            <th>Status</th>
+            <th>Started</th>
+            <th>Completion time</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody id="resultsTableBody">
+          <tr>
+            <td colspan="10" class="empty-state">
+              Challenge results will appear here.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- INDIVIDUAL ATTEMPT DETAILS -->
+  <div id="attemptDetailsPanel" class="panel hidden">
+
+    <div class="section-heading">
+      <div>
+        <h3>Individual challenge answers</h3>
+        <p id="attemptDetailsSubtitle" class="muted">
+          Select an attempt to view its answers.
+        </p>
+      </div>
+
+      <button
+        id="closeAttemptDetailsButton"
+        class="secondary-button"
+        type="button"
+      >
+        Close details
+      </button>
+    </div>
+
+    <p id="attemptDetailsMessage" class="message" role="status"></p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Question</th>
+            <th>Customer answer</th>
+            <th>Correct answer</th>
+            <th>Result</th>
+            <th>Points</th>
+            <th>Answered at</th>
+          </tr>
+        </thead>
+
+        <tbody id="attemptDetailsTableBody">
+          <tr>
+            <td colspan="7" class="empty-state">
+              No attempt selected.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</section>
+
       <section id="section-referrals" class="page-section hidden">
         <div class="panel"><h2>Referrals</h2><p>This section will be connected in the next development stage.</p></div>
       </section>
