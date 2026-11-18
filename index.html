@@ -346,9 +346,87 @@
   </div>
 </section>
 
-      <section id="section-customers" class="page-section hidden">
-        <div class="panel"><h2>Customers</h2><p>This section will be connected in the next development stage.</p></div>
-      </section>
+      
+<section id="section-customers" class="page-section hidden">
+  <div class="panel">
+
+    <div class="section-heading">
+      <div>
+        <h2>Customers Management</h2>
+        <p>View and manage registered Pixel Pick customers.</p>
+      </div>
+
+      <button
+        id="refreshCustomersButton"
+        class="primary-button"
+        type="button"
+      >
+        Refresh customers
+      </button>
+    </div>
+
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <p>Total customers</p>
+        <h3 id="customersTotalCount">0</h3>
+      </div>
+
+      <div class="stat-card">
+        <p>Active accounts</p>
+        <h3 id="customersActiveCount">0</h3>
+      </div>
+
+      <div class="stat-card">
+        <p>Paused accounts</p>
+        <h3 id="customersPausedCount">0</h3>
+      </div>
+
+    </div>
+
+    <p id="customersMessage" class="message" role="alert"></p>
+
+    <div class="filters-row">
+
+      <input
+        id="customersSearch"
+        type="search"
+        placeholder="Search customer name or email..."
+      >
+
+      <select id="customersStatusFilter">
+        <option value="">All account statuses</option>
+        <option value="active">Active</option>
+        <option value="paused">Paused</option>
+      </select>
+
+    </div>
+
+    <p id="customersResultCount">Showing 0 customers</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Email address</th>
+            <th>Registration date</th>
+            <th>Account status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody id="customersTableBody">
+          <tr>
+            <td colspan="5">Customer records will appear here.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
+
       <section id="section-results" class="page-section hidden">
         <div class="panel"><h2>Challenge results</h2><p>This section will be connected in the next development stage.</p></div>
       </section>
