@@ -1834,6 +1834,30 @@ function formatCompletionTime(milliseconds) {
 
   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 }
+// CHALLENGE RESULTS EVENT LISTENERS
+
+resultsSearch.addEventListener('input', renderChallengeResults);
+
+resultsCompetitionFilter.addEventListener('change', renderChallengeResults);
+
+resultsStatusFilter.addEventListener('change', renderChallengeResults);
+
+document.getElementById('refreshResultsButton')
+  .addEventListener('click', loadAdminChallengeResults);
+
+document.getElementById('clearResultsFiltersButton')
+  .addEventListener('click', () => {
+    resultsSearch.value = '';
+    resultsCompetitionFilter.value = '';
+    resultsStatusFilter.value = '';
+
+    renderChallengeResults();
+  });
+
+document.getElementById('closeAttemptDetailsButton')
+  .addEventListener('click', () => {
+    attemptDetailsPanel.classList.add('hidden');
+  });
 // ==========================================
 // INDIVIDUAL CHALLENGE ATTEMPT DETAILS
 // ==========================================
