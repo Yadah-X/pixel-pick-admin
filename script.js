@@ -818,9 +818,9 @@ showMessage(
     );
   } finally {
     saveCompetitionButton.disabled = false;
-    saveCompetitionButton.textContent = competitionId.value
-      ? 'Save changes'
-      : 'Create competition';
+    saveCompetitionButton.textContent = isEditing
+  ? 'Save changes'
+  : 'Create competition';
   }
 });
 
