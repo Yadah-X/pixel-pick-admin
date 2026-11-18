@@ -713,7 +713,7 @@ competitionForm.addEventListener('submit', async function (event) {
   const productId = competitionProduct.value || null;
   const imageUrl = competitionImage.value.trim() || null;
   const closingDateValue = competitionClosingDate.value;
-
+const isEditing = Boolean(competitionId.value);
   const allowedStatuses = ['draft', 'open', 'closed', 'completed'];
 
   if (!name || !prizeDescription) {
