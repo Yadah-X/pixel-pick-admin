@@ -165,9 +165,109 @@
       </section>
 
       <!-- OTHER SECTIONS: TO BE CONNECTED IN LATER STAGES -->
-      <section id="section-entries" class="page-section hidden">
-        <div class="panel"><h2>Entries</h2><p>This section will be connected in the next development stage.</p></div>
-      </section>
+      <!-- ENTRIES MANAGEMENT -->
+<section id="section-entries" class="page-section hidden">
+  <div class="section-heading">
+    <div>
+      <h2>Entries management</h2>
+      <p class="muted">View customer entries, competition details and payment statuses.</p>
+    </div>
+    <button id="refreshEntriesButton" class="secondary-button" type="button">
+      Refresh entries
+    </button>
+  </div>
+
+  <div class="stat-grid">
+    <article class="stat-card">
+      <span>Total entries</span>
+      <strong id="entriesTotalCount">—</strong>
+    </article>
+    <article class="stat-card">
+      <span>Paid entries</span>
+      <strong id="entriesPaidCount">—</strong>
+    </article>
+    <article class="stat-card">
+      <span>Pending entries</span>
+      <strong id="entriesPendingCount">—</strong>
+    </article>
+  </div>
+
+  <div id="entriesMessage" class="message" role="status"></div>
+
+  <div class="panel">
+    <div class="section-heading">
+      <div>
+        <h3>Customer entries</h3>
+        <p class="muted">Search by customer, email, competition or entry number.</p>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div>
+        <label for="entriesSearch">Search entries</label>
+        <input
+          id="entriesSearch"
+          type="search"
+          placeholder="Search customer, email or competition..."
+        >
+      </div>
+
+      <div>
+        <label for="entriesCompetitionFilter">Competition</label>
+        <select id="entriesCompetitionFilter">
+          <option value="">All competitions</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="entriesPaymentFilter">Payment status</label>
+        <select id="entriesPaymentFilter">
+          <option value="">All payment statuses</option>
+          <option value="paid">Paid</option>
+          <option value="pending">Pending</option>
+          <option value="failed">Failed</option>
+          <option value="refunded">Refunded</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="entriesTypeFilter">Entry type</label>
+        <select id="entriesTypeFilter">
+          <option value="">All entry types</option>
+          <option value="paid">Paid entry</option>
+          <option value="referral">Referral entry</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-heading">
+      <p id="entriesResultCount" class="muted">Loading entries...</p>
+      <button id="clearEntriesFiltersButton" class="secondary-button" type="button">
+        Clear filters
+      </button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Competition</th>
+            <th>Entry number</th>
+            <th>Entry type</th>
+            <th>Payment status</th>
+            <th>Entry date</th>
+          </tr>
+        </thead>
+        <tbody id="entriesTableBody">
+          <tr>
+            <td colspan="6" class="empty-state">Loading entries...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
       <section id="section-payments" class="page-section hidden">
         <div class="panel"><h2>Payments</h2><p>This section will be connected in the next development stage.</p></div>
       </section>
