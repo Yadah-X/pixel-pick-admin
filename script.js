@@ -83,6 +83,21 @@ const paymentsTotalCount = document.getElementById('paymentsTotalCount');
 const paymentsPaidCount = document.getElementById('paymentsPaidCount');
 const paymentsPendingCount = document.getElementById('paymentsPendingCount');
 const paymentsRevenueTotal = document.getElementById('paymentsRevenueTotal');
+// ------------------------------------------------------
+// CUSTOMERS MANAGEMENT ELEMENTS
+// ------------------------------------------------------
+
+const customersTableBody = document.getElementById('customersTableBody');
+const customersMessage = document.getElementById('customersMessage');
+const customersSearch = document.getElementById('customersSearch');
+const customersStatusFilter = document.getElementById('customersStatusFilter');
+const customersResultCount = document.getElementById('customersResultCount');
+
+const customersTotalCount = document.getElementById('customersTotalCount');
+const customersActiveCount = document.getElementById('customersActiveCount');
+const customersPausedCount = document.getElementById('customersPausedCount');
+
+let customersCache = [];
 
 // ------------------------------------------------------
 // CLOUDFLARE TURNSTILE
