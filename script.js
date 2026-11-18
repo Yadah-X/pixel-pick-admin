@@ -1705,7 +1705,7 @@ async function loadAdminChallengeResults() {
   populateResultsCompetitionFilter();
   renderChallengeResults();
 
-  showMessage(resultsMessage, 'Challenge results loaded successfully.');
+  showMessage(resultsMessage, 'Challenge results loaded successfully.', true);
 }
 
 function updateChallengeResultStats() {
