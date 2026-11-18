@@ -1651,7 +1651,186 @@ customersStatusFilter.addEventListener(
 document.getElementById('refreshCustomersButton')
   .addEventListener('click', loadAdminCustomers);
 
+// ==========================================
+// CHALLENGE RESULTS
+// ==========================================
 
+async function loadAdminChallengeResults() {
+  showMessage(resultsMessage, 'Loading challenge results...');
+
+  resultsTableBody.innerHTML = `
+    <tr>
+      <td colspan="10" class="empty-state">
+        Loading challenge results...
+      </td>
+    </tr>
+  `;
+
+  const { data, error } = await supabaseClient.rpc(
+    'get_admin_challenge_results'
+  );
+
+  if (error) {
+    console.error('Challenge results error:', error);
+
+    showMessage(
+      resultsMessage,
+      'Unable to load challenge results: ' + error.message
+    );
+
+    resultsTableBody.innerHTML = `
+      <tr>
+        <td colspan="10" class="empty-state">
+          Could not load challenge results.
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  challengeResultsCache = data || [];
+
+  updateChallengeResultStats();
+  populateResultsCompetitionFilter();
+  renderChallengeResults();
+}
+
+function updateChallengeResultStats() {
+  resultsTotalCount.textContent = challengeResultsCache.length;
+
+  resultsSubmittedCount.textContent =
+    challengeResultsCache.filter(
+      item => item.attempt_status === 'submitted'
+    ).length;
+
+  resultsInProgressCount.textContent =
+    challengeResultsCache.filter(
+      item => item.attempt_status === 'in_progress'
+    ).length;
+
+  resultsDisqualifiedCount.textContent =
+    challengeResultsCache.filter(
+      item => item.attempt_status === 'disqualified'
+    ).length;
+}
+
+function populateResultsCompetitionFilter() {
+  const selectedValue = resultsCompetitionFilter.value;
+
+  const competitions = [
+    ...new Map(
+      challengeResultsCache.map(item => [
+        item.competition_id,
+        item.competition_name
+      ])
+    ).entries()
+  ];
+
+  resultsCompetitionFilter.innerHTML =
+    '<option value="">All competitions</option>';
+
+  competitions.forEach(([id, name]) => {
+    const option = document.createElement('option');
+
+    option.value = id;
+    option.textContent = name || 'Unnamed competition';
+
+    resultsCompetitionFilter.appendChild(option);
+  });
+
+  resultsCompetitionFilter.value = selectedValue;
+}
+
+function renderChallengeResults() {
+  const searchTerm = resultsSearch.value.trim().toLowerCase();
+  const competitionFilter = resultsCompetitionFilter.value;
+  const statusFilter = resultsStatusFilter.value;
+
+  const filteredResults = challengeResultsCache.filter(item => {
+    const matchesSearch =
+      !searchTerm ||
+      (item.customer_name || '').toLowerCase().includes(searchTerm) ||
+      (item.competition_name || '').toLowerCase().includes(searchTerm) ||
+      String(item.entry_number || '').toLowerCase().includes(searchTerm);
+
+    const matchesCompetition =
+      !competitionFilter ||
+      item.competition_id === competitionFilter;
+
+    const matchesStatus =
+      !statusFilter ||
+      item.attempt_status === statusFilter;
+
+    return matchesSearch && matchesCompetition && matchesStatus;
+  });
+
+  resultsResultCount.textContent =
+    `${filteredResults.length} of ${challengeResultsCache.length} attempts`;
+
+  if (filteredResults.length === 0) {
+    resultsTableBody.innerHTML = `
+      <tr>
+        <td colspan="10" class="empty-state">
+          No matching challenge attempts found.
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  resultsTableBody.innerHTML = filteredResults.map(item => {
+    const status = ['submitted', 'in_progress', 'disqualified']
+      .includes(item.attempt_status)
+      ? item.attempt_status
+      : 'unknown';
+
+    const completionTime = item.completion_time_ms != null
+      ? formatCompletionTime(item.completion_time_ms)
+      : '—';
+
+    return `
+      <tr>
+        <td>${escapeHtml(item.customer_name || 'Name not provided')}</td>
+        <td>${escapeHtml(item.competition_name || 'Unknown competition')}</td>
+        <td>${escapeHtml(item.entry_number ?? '—')}</td>
+        <td>${escapeHtml(item.total_score ?? 0)}</td>
+        <td>${escapeHtml(item.correct_answers ?? 0)}</td>
+        <td>${escapeHtml(item.accuracy ?? 0)}%</td>
+        <td>
+          <span class="status-badge ${escapeHtml(getStatusClass(status))}">
+            ${escapeHtml(status.replace('_', ' '))}
+          </span>
+        </td>
+        <td>${escapeHtml(formatDate(item.started_at))}</td>
+        <td>${escapeHtml(completionTime)}</td>
+        <td>
+          <button
+            class="secondary-button"
+            type="button"
+            data-view-attempt="${escapeHtml(item.attempt_id)}"
+          >
+            View answers
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function formatCompletionTime(milliseconds) {
+  const totalSeconds = Math.floor(Number(milliseconds) / 1000);
+
+  if (!Number.isFinite(totalSeconds) || totalSeconds < 0) {
+    return '—';
+  }
+
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
 // ------------------------------------------------------
 // INITIAL STARTUP
 // ------------------------------------------------------
