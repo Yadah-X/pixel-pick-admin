@@ -100,6 +100,24 @@ const customersPausedCount = document.getElementById('customersPausedCount');
 
 let customersCache = [];
 
+// CHALLENGE RESULTS ELEMENTS
+const resultsTableBody = document.getElementById('resultsTableBody');
+const resultsMessage = document.getElementById('resultsMessage');
+const resultsSearch = document.getElementById('resultsSearch');
+const resultsCompetitionFilter = document.getElementById('resultsCompetitionFilter');
+const resultsStatusFilter = document.getElementById('resultsStatusFilter');
+const resultsResultCount = document.getElementById('resultsResultCount');
+
+const resultsTotalCount = document.getElementById('resultsTotalCount');
+const resultsSubmittedCount = document.getElementById('resultsSubmittedCount');
+const resultsInProgressCount = document.getElementById('resultsInProgressCount');
+const resultsDisqualifiedCount = document.getElementById('resultsDisqualifiedCount');
+
+const attemptDetailsPanel = document.getElementById('attemptDetailsPanel');
+const attemptDetailsSubtitle = document.getElementById('attemptDetailsSubtitle');
+const attemptDetailsMessage = document.getElementById('attemptDetailsMessage');
+const attemptDetailsTableBody = document.getElementById('attemptDetailsTableBody');
+
 // ------------------------------------------------------
 // CLOUDFLARE TURNSTILE
 // ------------------------------------------------------
