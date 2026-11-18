@@ -1924,7 +1924,17 @@ function renderChallengeAttemptDetails(tasks) {
   }).join('');
 }
 // CHALLENGE RESULTS EVENT LISTENERS
+resultsTableBody.addEventListener('click', event => {
+  const button = event.target.closest('[data-view-attempt]');
 
+  if (!button) {
+    return;
+  }
+
+  const attemptId = button.dataset.viewAttempt;
+
+  loadChallengeAttemptDetails(attemptId);
+});
 resultsSearch.addEventListener('input', renderChallengeResults);
 
 resultsCompetitionFilter.addEventListener('change', renderChallengeResults);
