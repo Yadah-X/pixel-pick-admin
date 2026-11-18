@@ -396,6 +396,9 @@ function showSection(sectionName) {
 if (section === 'entries' && currentAdmin) {
   loadAdminEntries();
 }
+  if (section === 'payments' && currentAdmin) {
+  loadAdminPayments();
+}
 }
 
 document.querySelectorAll('.nav-link').forEach(link => {
