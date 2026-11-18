@@ -1130,6 +1130,187 @@ document.getElementById('clearEntriesFiltersButton')
 // Refresh entries
 document.getElementById('refreshEntriesButton')
   .addEventListener('click', loadAdminEntries);
+
+// ------------------------------------------------------
+// PAYMENTS MANAGEMENT
+// ------------------------------------------------------
+
+// Load real payment records from Supabase
+async function loadAdminPayments() {
+  if (!currentAdmin) return;
+
+  paymentsTableBody.innerHTML =
+    '<tr><td colspan="6" class="empty-state">Loading payments...</td></tr>';
+
+  paymentsResultCount.textContent = 'Loading payments...';
+  showMessage(paymentsMessage, '');
+
+  const { data, error } = await supabaseClient.rpc('get_admin_payments');
+
+  if (error) {
+    console.error('Admin payments loading error:', error);
+
+    paymentsCache = [];
+
+    paymentsTableBody.innerHTML =
+      '<tr><td colspan="6" class="empty-state">Could not load payments.</td></tr>';
+
+    paymentsResultCount.textContent = 'Payments could not be loaded.';
+
+    showMessage(
+      paymentsMessage,
+      error.message || 'Unable to retrieve payment records.'
+    );
+
+    return;
+  }
+
+  paymentsCache = data || [];
+
+  updatePaymentsStatistics();
+  renderAdminPayments();
+
+  showMessage(
+    paymentsMessage,
+    'Payments loaded successfully.',
+    true
+  );
+}
+
+
+// Update payment summary cards
+function updatePaymentsStatistics() {
+  const total = paymentsCache.length;
+
+  const paid = paymentsCache.filter(
+    payment => payment.status === 'paid'
+  );
+
+  const pending = paymentsCache.filter(
+    payment => payment.status === 'pending'
+  );
+
+  // Revenue only includes successfully paid payments.
+  const revenue = paid.reduce(
+    (sum, payment) => sum + Number(payment.amount_cents || 0),
+    0
+  );
+
+  paymentsTotalCount.textContent =
+    total.toLocaleString('en-ZA');
+
+  paymentsPaidCount.textContent =
+    paid.length.toLocaleString('en-ZA');
+
+  paymentsPendingCount.textContent =
+    pending.length.toLocaleString('en-ZA');
+
+  paymentsRevenueTotal.textContent =
+    formatCurrency(revenue);
+}
+
+
+// Render payment records and apply search and filters
+function renderAdminPayments() {
+  const searchTerm = paymentsSearch.value.trim().toLowerCase();
+  const statusFilter = paymentsStatusFilter.value;
+
+  const filteredPayments = paymentsCache.filter(payment => {
+    const searchableText = [
+      payment.customer_name,
+      payment.customer_email,
+      payment.competition_name,
+      payment.payfast_payment_id,
+      payment.payment_id,
+      payment.entry_id
+    ].join(' ').toLowerCase();
+
+    const matchesSearch =
+      !searchTerm || searchableText.includes(searchTerm);
+
+    const matchesStatus =
+      !statusFilter || payment.status === statusFilter;
+
+    return matchesSearch && matchesStatus;
+  });
+
+  paymentsResultCount.textContent =
+    `Showing ${filteredPayments.length.toLocaleString('en-ZA')} of ` +
+    `${paymentsCache.length.toLocaleString('en-ZA')} payments`;
+
+  if (filteredPayments.length === 0) {
+    paymentsTableBody.innerHTML =
+      '<tr><td colspan="6" class="empty-state">No payments match your search or filters.</td></tr>';
+
+    return;
+  }
+
+  const allowedStatuses = [
+    'pending',
+    'paid',
+    'failed',
+    'cancelled',
+    'refunded'
+  ];
+
+  paymentsTableBody.innerHTML = filteredPayments.map(payment => {
+    const rawStatus = String(payment.status || 'pending').toLowerCase();
+
+    const safeStatus = allowedStatuses.includes(rawStatus)
+      ? rawStatus
+      : 'pending';
+
+    const paymentDate = payment.paid_at || payment.created_at;
+
+    return `
+      <tr>
+        <td>
+          <strong>${escapeHtml(payment.customer_name || 'Name not provided')}</strong>
+          <span class="table-subtext">${escapeHtml(payment.customer_email || 'No email')}</span>
+        </td>
+
+        <td>
+          ${escapeHtml(payment.competition_name || 'Unknown competition')}
+        </td>
+
+        <td>
+          ${escapeHtml(formatCurrency(payment.amount_cents))}
+        </td>
+
+        <td>
+          <span class="status-pill status-${safeStatus}">
+            ${escapeHtml(safeStatus)}
+          </span>
+        </td>
+
+        <td>
+          ${escapeHtml(payment.payfast_payment_id || 'Not available')}
+        </td>
+
+        <td>
+          ${escapeHtml(formatDate(paymentDate))}
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+
+// Payments search
+paymentsSearch.addEventListener('input', renderAdminPayments);
+
+
+// Payment status filter
+paymentsStatusFilter.addEventListener(
+  'change',
+  renderAdminPayments
+);
+
+
+// Refresh payments
+document.getElementById('refreshPaymentsButton')
+  .addEventListener('click', loadAdminPayments);
+
 // ------------------------------------------------------
 // INITIAL STARTUP
 // ------------------------------------------------------
