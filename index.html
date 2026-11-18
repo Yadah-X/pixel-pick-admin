@@ -268,9 +268,84 @@
     </div>
   </div>
 </section>
-      <section id="section-payments" class="page-section hidden">
-        <div class="panel"><h2>Payments</h2><p>This section will be connected in the next development stage.</p></div>
-      </section>
+      
+<section id="section-payments" class="page-section hidden">
+  <div class="panel">
+    <div class="section-heading">
+      <div>
+        <h2>Payments Management</h2>
+        <p>View and monitor customer payments.</p>
+      </div>
+      <button id="refreshPaymentsButton" class="primary-button" type="button">
+        Refresh payments
+      </button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <p>Total payments</p>
+        <h3 id="paymentsTotalCount">0</h3>
+      </div>
+
+      <div class="stat-card">
+        <p>Paid payments</p>
+        <h3 id="paymentsPaidCount">0</h3>
+      </div>
+
+      <div class="stat-card">
+        <p>Pending payments</p>
+        <h3 id="paymentsPendingCount">0</h3>
+      </div>
+
+      <div class="stat-card">
+        <p>Total revenue</p>
+        <h3 id="paymentsRevenueTotal">R0.00</h3>
+      </div>
+    </div>
+
+    <p id="paymentsMessage" class="message" role="alert"></p>
+
+    <div class="filters-row">
+      <input
+        id="paymentsSearch"
+        type="search"
+        placeholder="Search customer, email, competition or PayFast reference..."
+      >
+
+      <select id="paymentsStatusFilter">
+        <option value="">All payment statuses</option>
+        <option value="paid">Paid</option>
+        <option value="pending">Pending</option>
+        <option value="failed">Failed</option>
+        <option value="cancelled">Cancelled</option>
+        <option value="refunded">Refunded</option>
+      </select>
+    </div>
+
+    <p id="paymentsResultCount">Showing 0 payments</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Competition</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>PayFast reference</th>
+            <th>Payment date</th>
+          </tr>
+        </thead>
+        <tbody id="paymentsTableBody">
+          <tr>
+            <td colspan="6">Payments will appear here.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
       <section id="section-customers" class="page-section hidden">
         <div class="panel"><h2>Customers</h2><p>This section will be connected in the next development stage.</p></div>
       </section>
