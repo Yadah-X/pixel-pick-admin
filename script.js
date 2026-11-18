@@ -17,6 +17,7 @@ let captchaToken = null;
 let turnstileWidgetId = null;
 let competitionsCache = [];
 let productsCache = [];
+let entriesCache = [];
 let currentAdmin = null;
 
 // ------------------------------------------------------
