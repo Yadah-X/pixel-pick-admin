@@ -797,17 +797,17 @@ const isEditing = Boolean(competitionId.value);
       throw result.error;
     }
 
-    closeCompetitionModal();
+   closeCompetitionModal();
 
-    showMessage(
-      competitionMessage,
-      competitionId.value
-        ? 'Competition updated successfully.'
-        : 'Competition saved successfully.',
-      true
-    );
+await loadCompetitions();
 
-    await loadCompetitions();
+showMessage(
+  competitionMessage,
+  isEditing
+    ? 'Competition updated successfully.'
+    : 'Competition saved successfully.',
+  true
+);
 
   } catch (error) {
     console.error('Saving competition error:', error);
