@@ -1330,6 +1330,156 @@ document.getElementById('refreshPaymentsButton')
   .addEventListener('click', loadAdminPayments);
 
 // ------------------------------------------------------
+// CUSTOMERS MANAGEMENT
+// ------------------------------------------------------
+
+// Load real customer records from Supabase
+async function loadAdminCustomers() {
+  if (!currentAdmin) return;
+
+  customersTableBody.innerHTML =
+    '<tr><td colspan="5" class="empty-state">Loading customers...</td></tr>';
+
+  customersResultCount.textContent = 'Loading customers...';
+  showMessage(customersMessage, '');
+
+  const { data, error } = await supabaseClient.rpc('get_admin_customers');
+
+  if (error) {
+    console.error('Admin customers loading error:', error);
+
+    customersCache = [];
+
+    customersTableBody.innerHTML =
+      '<tr><td colspan="5" class="empty-state">Could not load customers.</td></tr>';
+
+    customersResultCount.textContent = 'Customers could not be loaded.';
+
+    showMessage(
+      customersMessage,
+      error.message || 'Unable to retrieve customer records.'
+    );
+
+    return;
+  }
+
+  customersCache = data || [];
+
+  updateCustomersStatistics();
+  renderAdminCustomers();
+
+  showMessage(
+    customersMessage,
+    'Customers loaded successfully.',
+    true
+  );
+}
+
+
+// Update customer summary cards
+function updateCustomersStatistics() {
+  const total = customersCache.length;
+
+  // Account status tracking will be connected in a later step.
+  // Until then, these are provisional counts.
+  const active = total;
+  const paused = 0;
+
+  customersTotalCount.textContent =
+    total.toLocaleString('en-ZA');
+
+  customersActiveCount.textContent =
+    active.toLocaleString('en-ZA');
+
+  customersPausedCount.textContent =
+    paused.toLocaleString('en-ZA');
+}
+
+
+// Render customers and apply search and filters
+function renderAdminCustomers() {
+  const searchTerm = customersSearch.value.trim().toLowerCase();
+  const statusFilter = customersStatusFilter.value;
+
+  const filteredCustomers = customersCache.filter(customer => {
+    const searchableText = [
+      customer.first_name,
+      customer.last_name,
+      customer.email,
+      customer.phone_number,
+      customer.customer_id
+    ].join(' ').toLowerCase();
+
+    const matchesSearch =
+      !searchTerm || searchableText.includes(searchTerm);
+
+    // Until real account status tracking is added,
+    // all returned accounts are provisionally treated as active.
+    const matchesStatus =
+      !statusFilter || statusFilter === 'active';
+
+    return matchesSearch && matchesStatus;
+  });
+
+  customersResultCount.textContent =
+    `Showing ${filteredCustomers.length.toLocaleString('en-ZA')} of ` +
+    `${customersCache.length.toLocaleString('en-ZA')} customers`;
+
+  if (filteredCustomers.length === 0) {
+    customersTableBody.innerHTML =
+      '<tr><td colspan="5" class="empty-state">No customers match your search or filter.</td></tr>';
+
+    return;
+  }
+
+  customersTableBody.innerHTML = filteredCustomers.map(customer => {
+    const fullName = [
+      customer.first_name,
+      customer.last_name
+    ].filter(Boolean).join(' ') || 'Name not provided';
+
+    return `
+      <tr>
+        <td>
+          <strong>${escapeHtml(fullName)}</strong>
+          <span class="table-subtext">${escapeHtml(customer.customer_id)}</span>
+        </td>
+
+        <td>${escapeHtml(customer.email || 'No email')}</td>
+
+        <td>${escapeHtml(formatDate(customer.registered_at))}</td>
+
+        <td>
+          <span class="status-pill status-open">Active</span>
+        </td>
+
+        <td>Account controls coming next</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+
+// Customer search
+customersSearch.addEventListener(
+  'input',
+  renderAdminCustomers
+);
+
+
+// Customer status filter
+customersStatusFilter.addEventListener(
+  'change',
+  renderAdminCustomers
+);
+
+
+// Refresh customers
+document.getElementById('refreshCustomersButton')
+  .addEventListener('click', loadAdminCustomers);
+
+
+// ------------------------------------------------------
 // INITIAL STARTUP
 // ------------------------------------------------------
 
