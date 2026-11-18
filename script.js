@@ -232,6 +232,13 @@ function getStatusClass(status) {
 
   return `status-${status}`;
 }
+function getChallengeResultStatusClass(status) {
+  const allowedStatuses = ['submitted', 'in_progress', 'disqualified'];
+
+  if (!allowedStatuses.includes(status)) return 'status-draft';
+
+  return `status-${status}`;
+}
 
 // ------------------------------------------------------
 // ADMIN AUTHENTICATION
