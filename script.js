@@ -840,7 +840,277 @@ showMessage(
   : 'Create competition';
   }
 });
+// ------------------------------------------------------
+// ENTRIES MANAGEMENT
+// ------------------------------------------------------
 
+async function loadAdminEntries() {
+  if (!currentAdmin) return;
+
+  entriesTableBody.innerHTML =
+    '<tr><td colspan="6" class="empty-state">Loading entries...</td></tr>';
+
+  showMessage(entriesMessage, '');
+  entriesResultCount.textContent = 'Loading entries...';
+
+  const { data, error } = await supabaseClient.rpc('get_admin_entries');
+
+  if (error) {
+    console.error('Admin entries loading error:', error);
+
+    entriesCache = [];
+
+    entriesTableBody.innerHTML =
+      '<tr><td colspan="6" class="empty-state">Could not load entries.</td></tr>';
+
+    entriesResultCount.textContent = 'Entries could not be loaded.';
+
+    showMessage(
+      entriesMessage,
+      error.message || 'Unable to retrieve customer entries.'
+    );
+
+    return;
+  }
+
+  entriesCache = data || [];
+
+  populateEntriesCompetitionFilter();
+  updateEntriesStatistics();
+  renderAdminEntries();
+
+  showMessage(
+    entriesMessage,
+    'Entries loaded successfully.',
+    true
+  );
+}
+
+
+// Populate competition filter
+function populateEntriesCompetitionFilter() {
+  const currentValue = entriesCompetitionFilter.value;
+
+  entriesCompetitionFilter.innerHTML =
+    '<option value="">All competitions</option>';
+
+  const competitions = [
+    ...new Map(
+      entriesCache.map(entry => [
+        entry.competition_id,
+        {
+          id: entry.competition_id,
+          name: entry.competition_name
+        }
+      ])
+    ).values()
+  ];
+
+  competitions.sort((a, b) =>
+    String(a.name).localeCompare(String(b.name))
+  );
+
+  competitions.forEach(competition => {
+    const option = document.createElement('option');
+
+    option.value = competition.id;
+    option.textContent = competition.name;
+
+    entriesCompetitionFilter.appendChild(option);
+  });
+
+  if (
+    currentValue &&
+    competitions.some(item => item.id === currentValue)
+  ) {
+    entriesCompetitionFilter.value = currentValue;
+  }
+}
+
+
+// Update entry statistics
+function updateEntriesStatistics() {
+  const total = entriesCache.length;
+
+  const paid = entriesCache.filter(
+    entry => entry.payment_status === 'paid'
+  ).length;
+
+  const pending = entriesCache.filter(
+    entry => entry.payment_status === 'pending'
+  ).length;
+
+  entriesTotalCount.textContent =
+    total.toLocaleString('en-ZA');
+
+  entriesPaidCount.textContent =
+    paid.toLocaleString('en-ZA');
+
+  entriesPendingCount.textContent =
+    pending.toLocaleString('en-ZA');
+}
+
+
+// Format date without changing the calendar day
+function formatEntryDate(value) {
+  if (!value) return 'Not available';
+
+  const date = new Date(`${value}T00:00:00`);
+
+  if (Number.isNaN(date.getTime())) {
+    return 'Not available';
+  }
+
+  return new Intl.DateTimeFormat('en-ZA', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  }).format(date);
+}
+
+
+// Render entries
+function renderAdminEntries() {
+  const searchTerm = entriesSearch.value.trim().toLowerCase();
+  const competitionFilter = entriesCompetitionFilter.value;
+  const paymentFilter = entriesPaymentFilter.value;
+  const typeFilter = entriesTypeFilter.value;
+
+  const filteredEntries = entriesCache.filter(entry => {
+    const searchableText = [
+      entry.customer_name,
+      entry.customer_email,
+      entry.competition_name,
+      entry.entry_number,
+      entry.entry_id
+    ].join(' ').toLowerCase();
+
+    const matchesSearch =
+      !searchTerm || searchableText.includes(searchTerm);
+
+    const matchesCompetition =
+      !competitionFilter ||
+      entry.competition_id === competitionFilter;
+
+    const matchesPayment =
+      !paymentFilter ||
+      entry.payment_status === paymentFilter;
+
+    const matchesType =
+      !typeFilter ||
+      entry.entry_type === typeFilter;
+
+    return (
+      matchesSearch &&
+      matchesCompetition &&
+      matchesPayment &&
+      matchesType
+    );
+  });
+
+  entriesResultCount.textContent =
+    `Showing ${filteredEntries.length.toLocaleString('en-ZA')} of ` +
+    `${entriesCache.length.toLocaleString('en-ZA')} entries`;
+
+  if (filteredEntries.length === 0) {
+    entriesTableBody.innerHTML =
+      '<tr><td colspan="6" class="empty-state">No entries match your search or filters.</td></tr>';
+
+    return;
+  }
+
+  entriesTableBody.innerHTML = filteredEntries.map(entry => {
+    const paymentStatus = String(
+      entry.payment_status || 'pending'
+    ).toLowerCase();
+
+    const entryType = String(
+      entry.entry_type || 'paid'
+    ).toLowerCase();
+
+    const allowedPaymentStatuses = [
+      'pending',
+      'paid',
+      'failed',
+      'refunded'
+    ];
+
+    const safePaymentStatus = allowedPaymentStatuses.includes(paymentStatus)
+      ? paymentStatus
+      : 'pending';
+
+    const safeEntryType = ['paid', 'referral'].includes(entryType)
+      ? entryType
+      : 'paid';
+
+    return `
+      <tr>
+        <td>
+          <strong>${escapeHtml(entry.customer_name || 'Name not provided')}</strong>
+          <span class="table-subtext">${escapeHtml(entry.customer_email || 'No email')}</span>
+        </td>
+
+        <td>
+          ${escapeHtml(entry.competition_name || 'Unknown competition')}
+        </td>
+
+        <td>
+          ${escapeHtml(entry.entry_number)}
+        </td>
+
+        <td>
+          ${escapeHtml(safeEntryType === 'referral' ? 'Referral' : 'Paid')}
+        </td>
+
+        <td>
+          <span class="status-pill status-${safePaymentStatus}">
+            ${escapeHtml(safePaymentStatus)}
+          </span>
+        </td>
+
+        <td>
+          ${escapeHtml(formatEntryDate(entry.entry_date))}
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+
+// Entry search and filters
+entriesSearch.addEventListener('input', renderAdminEntries);
+
+entriesCompetitionFilter.addEventListener(
+  'change',
+  renderAdminEntries
+);
+
+entriesPaymentFilter.addEventListener(
+  'change',
+  renderAdminEntries
+);
+
+entriesTypeFilter.addEventListener(
+  'change',
+  renderAdminEntries
+);
+
+
+// Clear entry filters
+document.getElementById('clearEntriesFiltersButton')
+  .addEventListener('click', function () {
+    entriesSearch.value = '';
+    entriesCompetitionFilter.value = '';
+    entriesPaymentFilter.value = '';
+    entriesTypeFilter.value = '';
+
+    renderAdminEntries();
+  });
+
+
+// Refresh entries
+document.getElementById('refreshEntriesButton')
+  .addEventListener('click', loadAdminEntries);
 // ------------------------------------------------------
 // INITIAL STARTUP
 // ------------------------------------------------------
