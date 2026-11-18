@@ -1,266 +1,256 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pixel Pick Admin</title>
-
+  <meta name="description" content="Pixel Pick administration dashboard">
   <link rel="stylesheet" href="style.css">
 
-  <!-- Cloudflare Turnstile security verification -->
- <script
-  src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit"
-  defer
-></script>
+  <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit"
+    defer
+  ></script>
 </head>
-
 <body>
-
-  <!-- ADMIN LOGIN -->
-  <section id="loginScreen" class="login-screen">
-    <div class="login-card">
-
-      <div class="logo">PIXEL<span>PICK</span></div>
-
-      <p class="muted">ADMIN CONSOLE</p>
-
-      <h1>Administrator login</h1>
-
-      <p>Sign in using your existing Pixel Pick account.</p>
+  <!-- LOGIN -->
+  <main id="loginScreen" class="login-screen">
+    <section class="login-card">
+      <div class="brand-mark">PIXEL PICK</div>
+      <h1>Admin login</h1>
+      <p class="muted">Sign in to manage Pixel Pick.</p>
 
       <form id="loginForm">
-
-        <label for="email">Email address</label>
-
+        <label for="loginEmail">Email address</label>
         <input
-          id="email"
+          id="loginEmail"
           type="email"
           autocomplete="username"
+          placeholder="Your admin email"
           required
         >
 
-        <label for="password">Password</label>
-
+        <label for="loginPassword">Password</label>
         <input
-          id="password"
+          id="loginPassword"
           type="password"
           autocomplete="current-password"
+          placeholder="Your password"
           required
         >
 
-        <!-- Cloudflare Turnstile verification -->
         <div id="pixelPickTurnstile"></div>
 
-        <!-- Sign in button -->
-        <button
-          id="loginButton"
-          class="primary"
-          type="submit"
-        >
+        <button id="loginButton" type="submit" class="primary-button full-width">
           Sign in
         </button>
 
-        <p
-          id="loginMessage"
-          class="message"
-          role="status"
-        ></p>
-
+        <p id="loginMessage" class="message" role="alert"></p>
       </form>
-    </div>
-  </section>
+    </section>
+  </main>
 
+  <!-- ADMIN APPLICATION -->
+  <div id="adminApp" class="admin-app hidden">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-mark">PIXEL PICK</div>
+        <span>ADMINISTRATION</span>
+      </div>
 
-  <!-- ADMIN DASHBOARD -->
-  <div id="adminApp" class="layout" hidden>
-
-    <!-- SIDEBAR -->
-    <aside>
-
-      <div class="logo">PIXEL<span>PICK</span></div>
-
-      <p class="muted">ADMIN CONSOLE</p>
-
-      <nav>
-        <a class="active" href="#dashboard">Dashboard</a>
-
-        <a href="#competitions">Competitions</a>
-
-        <a href="#entries">Entries</a>
-
-        <a href="#payments">Payments</a>
-
-        <a href="#customers">Customers</a>
-
-        <a href="#results">Challenge results</a>
-
-        <a href="#referrals">Referrals</a>
-
-        <a href="#winners">Winners</a>
-
-        <a href="#support">Customer support</a>
+      <nav class="side-nav" aria-label="Admin navigation">
+        <a href="#dashboard" class="nav-link active" data-section="dashboard">Dashboard</a>
+        <a href="#competitions" class="nav-link" data-section="competitions">Competitions</a>
+        <a href="#entries" class="nav-link" data-section="entries">Entries</a>
+        <a href="#payments" class="nav-link" data-section="payments">Payments</a>
+        <a href="#customers" class="nav-link" data-section="customers">Customers</a>
+        <a href="#results" class="nav-link" data-section="results">Challenge results</a>
+        <a href="#referrals" class="nav-link" data-section="referrals">Referrals</a>
+        <a href="#winners" class="nav-link" data-section="winners">Winners</a>
+        <a href="#support" class="nav-link" data-section="support">Customer support</a>
       </nav>
 
-      <button
-        id="logoutButton"
-        class="logout-button"
-        type="button"
-      >
-        Log out
-      </button>
-
+      <div class="sidebar-bottom">
+        <div id="adminEmail" class="admin-email"></div>
+        <button id="logoutButton" class="secondary-button full-width" type="button">
+          Sign out
+        </button>
+      </div>
     </aside>
 
-
-    <!-- MAIN DASHBOARD CONTENT -->
-    <main>
-
-      <header>
-
+    <main class="main-content">
+      <header class="topbar">
         <div>
-          <p class="muted">CONTROL CENTRE</p>
-
-          <h1>Dashboard</h1>
-
-          <p id="adminEmail" class="muted"></p>
+          <p class="eyebrow">PIXEL PICK ADMIN</p>
+          <h1 id="pageTitle">Dashboard</h1>
         </div>
-
-        <span class="admin-status">
-          ADMIN ACCESS
-        </span>
-
+        <span id="connectionStatus" class="connection-status">Checking connection...</span>
       </header>
 
-
-      <!-- DASHBOARD OVERVIEW -->
-      <section id="dashboard" class="panel">
-
-        <h2>Welcome to Pixel Pick Admin</h2>
-
-        <p>
-          Your administrator login is connected.
-          Live business records will be connected in the next stage.
-        </p>
-
-        <div id="connectionStatus" class="notice">
-          Checking administrator access...
+      <!-- DASHBOARD -->
+      <section id="section-dashboard" class="page-section">
+        <div class="welcome-panel">
+          <h2>Welcome to Pixel Pick</h2>
+          <p>Manage your competitions and monitor your platform.</p>
         </div>
 
-      </section>
+        <div class="stat-grid">
+          <article class="stat-card">
+            <span>Total competitions</span>
+            <strong id="totalCompetitions">—</strong>
+          </article>
+          <article class="stat-card">
+            <span>Open competitions</span>
+            <strong id="openCompetitions">—</strong>
+          </article>
+          <article class="stat-card">
+            <span>Total entries</span>
+            <strong id="totalEntries">—</strong>
+          </article>
+        </div>
 
+        <div class="panel">
+          <h2>Quick access</h2>
+          <p>Use the navigation menu to manage competitions. Other admin sections will be connected in later stages.</p>
+          <button class="primary-button" type="button" data-go-section="competitions">
+            Manage competitions
+          </button>
+        </div>
+      </section>
 
       <!-- COMPETITIONS -->
-      <section class="panel" id="competitions">
+      <section id="section-competitions" class="page-section hidden">
+        <div class="section-heading">
+          <div>
+            <h2>Competition management</h2>
+            <p class="muted">Create, update and manage your competitions.</p>
+          </div>
+          <button id="newCompetitionButton" class="primary-button" type="button">
+            + Create competition
+          </button>
+        </div>
 
-        <h2>Competitions</h2>
+        <div id="competitionMessage" class="message" role="status"></div>
 
-        <p>
-          Competition creation and management will be connected next.
-        </p>
+        <div class="panel">
+          <div class="table-heading">
+            <h3>All competitions</h3>
+            <button id="refreshCompetitionsButton" class="secondary-button" type="button">
+              Refresh
+            </button>
+          </div>
 
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Competition</th>
+                  <th>Entry price</th>
+                  <th>Entries</th>
+                  <th>Closing date</th>
+                  <th>Status</th>
+                  <th>Featured</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="competitionsTableBody">
+                <tr>
+                  <td colspan="7" class="empty-state">Loading competitions...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </section>
 
-
-      <!-- ENTRIES -->
-      <section class="panel" id="entries">
-
-        <h2>Entries</h2>
-
-        <p>
-          Customer entry records are not connected yet.
-        </p>
-
+      <!-- OTHER SECTIONS: TO BE CONNECTED IN LATER STAGES -->
+      <section id="section-entries" class="page-section hidden">
+        <div class="panel"><h2>Entries</h2><p>This section will be connected in the next development stage.</p></div>
       </section>
-
-
-      <!-- PAYMENTS -->
-      <section class="panel" id="payments">
-
-        <h2>Payments</h2>
-
-        <p>
-          Verified PayFast payment records are not connected yet.
-        </p>
-
+      <section id="section-payments" class="page-section hidden">
+        <div class="panel"><h2>Payments</h2><p>This section will be connected in the next development stage.</p></div>
       </section>
-
-
-      <!-- CUSTOMERS -->
-      <section class="panel" id="customers">
-
-        <h2>Customers</h2>
-
-        <p>
-          Customer records are not connected yet.
-        </p>
-
+      <section id="section-customers" class="page-section hidden">
+        <div class="panel"><h2>Customers</h2><p>This section will be connected in the next development stage.</p></div>
       </section>
-
-
-      <!-- CHALLENGE RESULTS -->
-      <section class="panel" id="results">
-
-        <h2>Challenge results</h2>
-
-        <p>
-          Challenge attempts and scores are not connected yet.
-        </p>
-
+      <section id="section-results" class="page-section hidden">
+        <div class="panel"><h2>Challenge results</h2><p>This section will be connected in the next development stage.</p></div>
       </section>
-
-
-      <!-- REFERRALS -->
-      <section class="panel" id="referrals">
-
-        <h2>Referrals</h2>
-
-        <p>
-          Referral records and rewards are not connected yet.
-        </p>
-
+      <section id="section-referrals" class="page-section hidden">
+        <div class="panel"><h2>Referrals</h2><p>This section will be connected in the next development stage.</p></div>
       </section>
-
-
-      <!-- WINNERS -->
-      <section class="panel" id="winners">
-
-        <h2>Winners</h2>
-
-        <p>
-          Winner review and approval are not connected yet.
-        </p>
-
+      <section id="section-winners" class="page-section hidden">
+        <div class="panel"><h2>Winners</h2><p>This section will be connected in the next development stage.</p></div>
       </section>
-
-
-      <!-- CUSTOMER SUPPORT -->
-      <section class="panel" id="support">
-
-        <h2>Customer support</h2>
-
-        <p>
-          Customer enquiries are not connected yet.
-        </p>
-
+      <section id="section-support" class="page-section hidden">
+        <div class="panel"><h2>Customer support</h2><p>This section will be connected in the next development stage.</p></div>
       </section>
-
-
-      <p class="footer-note">
-        Pixel Pick Admin — authorised administrator access only.
-      </p>
-
     </main>
-
   </div>
 
+  <!-- CREATE / EDIT COMPETITION MODAL -->
+  <div id="competitionModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="competitionModalTitle">
+    <div class="modal-card">
+      <div class="modal-heading">
+        <div>
+          <p class="eyebrow">COMPETITION DETAILS</p>
+          <h2 id="competitionModalTitle">Create competition</h2>
+        </div>
+        <button id="closeCompetitionModal" class="close-button" type="button" aria-label="Close">×</button>
+      </div>
 
-  <!-- SUPABASE CONNECTION -->
+      <form id="competitionForm">
+        <input id="competitionId" type="hidden">
+
+        <label for="competitionName">Competition name *</label>
+        <input id="competitionName" type="text" maxlength="150" required placeholder="e.g. Win an iPhone">
+
+        <label for="competitionPrize">Prize description *</label>
+        <textarea id="competitionPrize" rows="3" required placeholder="Describe the prize"></textarea>
+
+        <label for="competitionProduct">Link a product</label>
+        <select id="competitionProduct">
+          <option value="">No product selected</option>
+        </select>
+        <p class="field-help">Only active products are available in this list.</p>
+
+        <label for="competitionImage">Product image URL</label>
+        <input id="competitionImage" type="url" placeholder="https://...">
+        <div id="productImagePreview" class="image-preview-wrap hidden">
+          <img id="productImagePreviewImage" alt="Product image preview">
+        </div>
+
+        <label for="competitionPrice">Entry price (ZAR) *</label>
+        <input id="competitionPrice" type="number" min="0" step="0.01" required placeholder="e.g. 25.00">
+
+        <label for="competitionClosingDate">Closing date and time</label>
+        <input id="competitionClosingDate" type="datetime-local">
+
+        <label for="competitionStatus">Competition status *</label>
+        <select id="competitionStatus" required>
+          <option value="draft">Draft</option>
+          <option value="open">Open</option>
+          <option value="closed">Closed</option>
+          <option value="completed">Completed</option>
+        </select>
+
+        <label class="checkbox-label" for="competitionFeatured">
+          <input id="competitionFeatured" type="checkbox">
+          Feature this competition on the customer website
+        </label>
+
+        <p id="competitionFormMessage" class="message" role="alert"></p>
+
+        <div class="modal-actions">
+          <button id="cancelCompetitionButton" class="secondary-button" type="button">Cancel</button>
+          <button id="saveCompetitionButton" class="primary-button" type="submit">Save competition</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <!-- ADMIN JAVASCRIPT -->
   <script src="script.js"></script>
-
 </body>
 </html>
