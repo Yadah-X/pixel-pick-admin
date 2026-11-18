@@ -414,6 +414,9 @@ if (section === 'entries' && currentAdmin) {
   if (section === 'payments' && currentAdmin) {
   loadAdminPayments();
 }
+  if (section === 'customers' && currentAdmin) {
+  loadAdminCustomers();
+}
 }
 
 document.querySelectorAll('.nav-link').forEach(link => {
