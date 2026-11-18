@@ -55,6 +55,18 @@ const competitionFeatured = document.getElementById('competitionFeatured');
 const saveCompetitionButton = document.getElementById('saveCompetitionButton');
 const productImagePreview = document.getElementById('productImagePreview');
 const productImagePreviewImage = document.getElementById('productImagePreviewImage');
+// Entries management elements
+const entriesTableBody = document.getElementById('entriesTableBody');
+const entriesMessage = document.getElementById('entriesMessage');
+const entriesSearch = document.getElementById('entriesSearch');
+const entriesCompetitionFilter = document.getElementById('entriesCompetitionFilter');
+const entriesPaymentFilter = document.getElementById('entriesPaymentFilter');
+const entriesTypeFilter = document.getElementById('entriesTypeFilter');
+const entriesResultCount = document.getElementById('entriesResultCount');
+
+const entriesTotalCount = document.getElementById('entriesTotalCount');
+const entriesPaidCount = document.getElementById('entriesPaidCount');
+const entriesPendingCount = document.getElementById('entriesPendingCount');
 
 // ------------------------------------------------------
 // CLOUDFLARE TURNSTILE
