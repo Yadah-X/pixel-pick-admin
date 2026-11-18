@@ -1834,6 +1834,95 @@ function formatCompletionTime(milliseconds) {
 
   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 }
+// LOAD INDIVIDUAL CHALLENGE ATTEMPT DETAILS
+
+async function loadChallengeAttemptDetails(attemptId) {
+  attemptDetailsPanel.classList.remove('hidden');
+
+  attemptDetailsSubtitle.textContent = 'Loading attempt details...';
+
+  attemptDetailsTableBody.innerHTML = `
+    <tr>
+      <td colspan="7" class="empty-state">
+        Loading answers...
+      </td>
+    </tr>
+  `;
+
+  showMessage(attemptDetailsMessage, '');
+
+  const { data, error } = await supabaseClient.rpc(
+    'get_admin_challenge_attempt_details',
+    {
+      p_attempt_id: attemptId
+    }
+  );
+
+  if (error) {
+    console.error('Attempt details error:', error);
+
+    showMessage(
+      attemptDetailsMessage,
+      'Unable to load attempt details: ' + error.message
+    );
+
+    return;
+  }
+
+  const attempt = challengeResultsCache.find(
+    item => item.attempt_id === attemptId
+  );
+
+  attemptDetailsSubtitle.textContent = attempt
+    ? `${attempt.customer_name} — ${attempt.competition_name}`
+    : 'Challenge attempt details';
+
+  renderChallengeAttemptDetails(data || []);
+}
+
+function renderChallengeAttemptDetails(tasks) {
+  if (tasks.length === 0) {
+    attemptDetailsTableBody.innerHTML = `
+      <tr>
+        <td colspan="7" class="empty-state">
+          No task details found.
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  attemptDetailsTableBody.innerHTML = tasks.map(task => {
+    const result = task.is_correct === true
+      ? 'Correct'
+      : task.is_correct === false
+        ? 'Incorrect'
+        : 'Not answered';
+
+    const resultClass = task.is_correct === true
+      ? 'success'
+      : task.is_correct === false
+        ? 'danger'
+        : '';
+
+    return `
+      <tr>
+        <td>${escapeHtml(task.task_number ?? '—')}</td>
+        <td>${escapeHtml(task.instruction || '—')}</td>
+        <td>${escapeHtml(task.selected_answer_key || 'Not answered')}</td>
+        <td>${escapeHtml(task.correct_answer_key || '—')}</td>
+        <td>
+          <span class="status-badge ${resultClass}">
+            ${result}
+          </span>
+        </td>
+        <td>${escapeHtml(task.points_awarded ?? 0)}</td>
+        <td>${task.answered_at ? escapeHtml(formatDate(task.answered_at)) : '—'}</td>
+      </tr>
+    `;
+  }).join('');
+}
 // CHALLENGE RESULTS EVENT LISTENERS
 
 resultsSearch.addEventListener('input', renderChallengeResults);
