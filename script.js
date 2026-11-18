@@ -436,6 +436,9 @@ if (section === 'entries' && currentAdmin) {
   if (section === 'customers' && currentAdmin) {
   loadAdminCustomers();
 }
+  if (section === 'results' && currentAdmin) {
+  loadAdminChallengeResults();
+}
 }
 
 document.querySelectorAll('.nav-link').forEach(link => {
