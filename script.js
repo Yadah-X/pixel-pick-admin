@@ -374,8 +374,12 @@ function showSection(sectionName) {
     pageTitles[section];
 
   if (section === 'competitions' && currentAdmin) {
-    loadCompetitions();
-  }
+  loadCompetitions();
+}
+
+if (section === 'entries' && currentAdmin) {
+  loadAdminEntries();
+}
 }
 
 document.querySelectorAll('.nav-link').forEach(link => {
