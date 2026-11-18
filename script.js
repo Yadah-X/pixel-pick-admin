@@ -1329,6 +1329,7 @@ paymentsStatusFilter.addEventListener(
 document.getElementById('refreshPaymentsButton')
   .addEventListener('click', loadAdminPayments);
 
+
 // ------------------------------------------------------
 // CUSTOMERS MANAGEMENT
 // ------------------------------------------------------
@@ -1343,7 +1344,9 @@ async function loadAdminCustomers() {
   customersResultCount.textContent = 'Loading customers...';
   showMessage(customersMessage, '');
 
-  const { data, error } = await supabaseClient.rpc('get_admin_customers');
+  const { data, error } = await supabaseClient.rpc(
+    'get_admin_customer_directory'
+  );
 
   if (error) {
     console.error('Admin customers loading error:', error);
@@ -1380,10 +1383,13 @@ async function loadAdminCustomers() {
 function updateCustomersStatistics() {
   const total = customersCache.length;
 
-  // Account status tracking will be connected in a later step.
-  // Until then, these are provisional counts.
-  const active = total;
-  const paused = 0;
+  const active = customersCache.filter(
+    customer => customer.account_status === 'active'
+  ).length;
+
+  const paused = customersCache.filter(
+    customer => customer.account_status === 'paused'
+  ).length;
 
   customersTotalCount.textContent =
     total.toLocaleString('en-ZA');
@@ -1407,16 +1413,14 @@ function renderAdminCustomers() {
       customer.last_name,
       customer.email,
       customer.phone_number,
-      customer.customer_id
+      customer.user_id
     ].join(' ').toLowerCase();
 
     const matchesSearch =
       !searchTerm || searchableText.includes(searchTerm);
 
-    // Until real account status tracking is added,
-    // all returned accounts are provisionally treated as active.
     const matchesStatus =
-      !statusFilter || statusFilter === 'active';
+      !statusFilter || customer.account_status === statusFilter;
 
     return matchesSearch && matchesStatus;
   });
@@ -1438,25 +1442,175 @@ function renderAdminCustomers() {
       customer.last_name
     ].filter(Boolean).join(' ') || 'Name not provided';
 
+    const status = customer.account_status === 'paused'
+      ? 'paused'
+      : 'active';
+
+    const statusLabel = status === 'paused' ? 'Paused' : 'Active';
+
+    const statusClass = status === 'paused'
+      ? 'status-closed'
+      : 'status-open';
+
+    const actionLabel = status === 'paused'
+      ? 'Reactivate'
+      : 'Pause account';
+
+    const entries = Number(customer.total_entries || 0);
+    const payments = Number(customer.total_payments || 0);
+
+    const accountDetails =
+      `${entries} entries · ${payments} payment orders`;
+
     return `
       <tr>
         <td>
           <strong>${escapeHtml(fullName)}</strong>
-          <span class="table-subtext">${escapeHtml(customer.customer_id)}</span>
+          <span class="table-subtext">
+            ${escapeHtml(customer.user_id)}
+          </span>
+          <span class="table-subtext">
+            ${escapeHtml(customer.phone_number || 'No phone number')}
+          </span>
+          <span class="table-subtext">
+            ${escapeHtml(accountDetails)}
+          </span>
         </td>
-
-        <td>${escapeHtml(customer.email || 'No email')}</td>
-
-        <td>${escapeHtml(formatDate(customer.registered_at))}</td>
 
         <td>
-          <span class="status-pill status-open">Active</span>
+          ${escapeHtml(customer.email || 'No email')}
         </td>
 
-        <td>Account controls coming next</td>
+        <td>
+          ${escapeHtml(formatDate(customer.registration_date))}
+        </td>
+
+        <td>
+          <span class="status-pill ${statusClass}">
+            ${statusLabel}
+          </span>
+          ${
+            status === 'paused'
+              ? `<span class="table-subtext">
+                  ${escapeHtml(customer.pause_reason || 'No reason provided')}
+                </span>`
+              : ''
+          }
+        </td>
+
+        <td>
+          <button
+            type="button"
+            class="table-action"
+            data-customer-status="${escapeHtml(customer.user_id)}"
+            data-next-status="${status === 'paused' ? 'active' : 'paused'}"
+          >
+            ${actionLabel}
+          </button>
+        </td>
       </tr>
     `;
   }).join('');
+
+  // Connect the Pause and Reactivate buttons
+  customersTableBody
+    .querySelectorAll('[data-customer-status]')
+    .forEach(button => {
+      button.addEventListener('click', async () => {
+        await changeCustomerStatus(
+          button.dataset.customerStatus,
+          button.dataset.nextStatus,
+          button
+        );
+      });
+    });
+}
+
+
+// Pause or reactivate a customer
+async function changeCustomerStatus(userId, newStatus, button) {
+  if (!currentAdmin) {
+    showMessage(customersMessage, 'Please sign in again.');
+    return;
+  }
+
+  const customer = customersCache.find(
+    item => item.user_id === userId
+  );
+
+  if (!customer) {
+    showMessage(customersMessage, 'Customer account could not be found.');
+    return;
+  }
+
+  let reason = null;
+
+  if (newStatus === 'paused') {
+    const enteredReason = prompt(
+      `Why are you pausing ${customer.email}?`
+    );
+
+    if (enteredReason === null) return;
+
+    reason = enteredReason.trim() || 'Paused by administrator';
+
+    const confirmed = confirm(
+      `Are you sure you want to mark ${customer.email} as paused?`
+    );
+
+    if (!confirmed) return;
+
+  } else {
+    const confirmed = confirm(
+      `Are you sure you want to reactivate ${customer.email}?`
+    );
+
+    if (!confirmed) return;
+  }
+
+  button.disabled = true;
+  button.textContent = 'Updating...';
+
+  showMessage(customersMessage, '');
+
+  try {
+    const { data, error } = await supabaseClient.rpc(
+      'set_admin_customer_status',
+      {
+        p_user_id: userId,
+        p_status: newStatus,
+        p_reason: reason
+      }
+    );
+
+    if (error) throw error;
+
+    if (data !== true) {
+      throw new Error('The account status could not be updated.');
+    }
+
+    await loadAdminCustomers();
+
+    showMessage(
+      customersMessage,
+      newStatus === 'paused'
+        ? 'Customer account status changed to paused.'
+        : 'Customer account successfully reactivated.',
+      true
+    );
+
+  } catch (error) {
+    console.error('Customer status update error:', error);
+
+    showMessage(
+      customersMessage,
+      error.message || 'Unable to update customer account status.'
+    );
+
+    button.disabled = false;
+    button.textContent =
+      newStatus === 'paused' ? 'Pause account' : 'Reactivate';
+  }
 }
 
 
