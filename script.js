@@ -778,7 +778,7 @@ const isEditing = Boolean(competitionId.value);
   try {
     let result;
 
-    if (competitionId.value) {
+    if (isEditing) {
       result = await supabaseClient
         .from('competitions')
         .update(payload)
