@@ -1953,6 +1953,7 @@ function renderAdminSupport() {
 
 // View individual customer support request
 function showSupportDetails(requestId) {
+  selectedSupportRequestId = requestId;
   const request = supportRequestsCache.find(
     item => item.request_id === requestId
   );
