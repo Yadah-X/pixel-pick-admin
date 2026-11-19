@@ -1827,6 +1827,19 @@ customersStatusFilter.addEventListener(
 document.getElementById('refreshCustomersButton')
   .addEventListener('click', loadAdminCustomers);
 
+// Referral search
+if (referralSearch) {
+  referralSearch.addEventListener(
+    'input',
+    renderAdminReferrals
+  );
+}
+
+// Refresh referrals
+document.getElementById('refreshReferralsBtn')
+  ?.addEventListener('click', loadAdminReferrals);
+
+
 // ==========================================
 // CHALLENGE RESULTS
 // ==========================================
