@@ -2237,6 +2237,15 @@ document.getElementById('refreshReferralsBtn')
 document.getElementById('loadWinnerLeaderboardBtn')
   ?.addEventListener('click', loadWinnerLeaderboard);
 
+// Handle Select winner buttons
+winnersLeaderboardBody?.addEventListener('click', async (event) => {
+  const button = event.target.closest('[data-select-winner]');
+
+  if (!button) return;
+
+  await selectAdminMonthlyWinner(button.dataset.selectWinner);
+});
+
 // Refresh winners leaderboard
 document.getElementById('refreshWinnersBtn')
   ?.addEventListener('click', loadWinnerLeaderboard);
