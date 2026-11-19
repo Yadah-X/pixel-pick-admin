@@ -1421,6 +1421,72 @@ async function loadAdminCustomers() {
   );
 }
 
+// ------------------------------------------------------
+// REFERRALS MANAGEMENT
+// ------------------------------------------------------
+
+// Load real referral records from Supabase
+async function loadAdminReferrals() {
+  if (!currentAdmin) return;
+
+  referralsTableBody.innerHTML =
+    '<tr><td colspan="6" class="empty-state">Loading referrals...</td></tr>';
+
+  showMessage(referralsMessage, '');
+
+  const { data, error } = await supabaseClient.rpc(
+    'get_admin_referral_dashboard'
+  );
+
+  if (error) {
+    console.error('Admin referrals loading error:', error);
+
+    referralsCache = [];
+
+    referralsTableBody.innerHTML =
+      '<tr><td colspan="6" class="empty-state">Could not load referrals.</td></tr>';
+
+    showMessage(
+      referralsMessage,
+      error.message || 'Unable to retrieve referral records.'
+    );
+
+    return;
+  }
+
+  const dashboard = data || {};
+
+  referralsCache = dashboard.referrals || [];
+
+  if (totalReferrals) {
+    totalReferrals.textContent =
+      dashboard.summary?.total_referrals ?? 0;
+  }
+
+  if (qualifiedReferrals) {
+    qualifiedReferrals.textContent =
+      dashboard.summary?.qualified_referrals ?? 0;
+  }
+
+  if (rewardsIssued) {
+    rewardsIssued.textContent =
+      dashboard.rewards_summary?.rewards_issued ?? 0;
+  }
+
+  if (rewardsRedeemed) {
+    rewardsRedeemed.textContent =
+      dashboard.rewards_summary?.rewards_redeemed ?? 0;
+  }
+
+  renderAdminReferrals();
+
+  showMessage(
+    referralsMessage,
+    'Referrals loaded successfully.',
+    true
+  );
+}
+
 
 // Update customer summary cards
 function updateCustomersStatistics() {
