@@ -2447,6 +2447,30 @@ winnersLeaderboardBody?.addEventListener('click', async (event) => {
 document.getElementById('refreshWinnersBtn')
   ?.addEventListener('click', loadWinnerLeaderboard);
 
+// ------------------------------------------------------
+// CUSTOMER SUPPORT EVENT LISTENERS
+// ------------------------------------------------------
+
+// Refresh support requests
+document.getElementById('refreshSupportBtn')
+  ?.addEventListener('click', loadAdminSupport);
+
+// Search support requests
+supportSearch?.addEventListener('input', renderAdminSupport);
+
+// Filter support requests by status
+supportStatusFilter?.addEventListener('change', renderAdminSupport);
+
+// Open individual support request
+supportTableBody?.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-view-support]');
+
+  if (!button) return;
+
+  showSupportDetails(button.dataset.viewSupport);
+});
+
+
 // ==========================================
 // CHALLENGE RESULTS
 // ==========================================
