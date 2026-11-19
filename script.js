@@ -460,6 +460,9 @@ if (section === 'entries' && currentAdmin) {
   if (section === 'results' && currentAdmin) {
   loadAdminChallengeResults();
 }
+  if (section === 'referrals' && currentAdmin) {
+  loadAdminReferrals();
+}
 }
 
 document.querySelectorAll('.nav-link').forEach(link => {
