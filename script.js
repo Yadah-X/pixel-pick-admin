@@ -2525,7 +2525,11 @@ supportTableBody?.addEventListener('click', (event) => {
 
   showSupportDetails(button.dataset.viewSupport);
 });
-
+// Update support request status
+updateSupportStatusBtn?.addEventListener(
+  'click',
+  updateAdminSupportStatus
+);
 
 // ==========================================
 // CHALLENGE RESULTS
