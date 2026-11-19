@@ -147,6 +147,11 @@ const resolvedSupportRequests = document.getElementById('resolvedSupportRequests
 
 const supportDetailsPanel = document.getElementById('supportDetailsPanel');
 const supportDetailsContent = document.getElementById('supportDetailsContent');
+const supportNewStatus = document.getElementById('supportNewStatus');
+const updateSupportStatusBtn = document.getElementById('updateSupportStatusBtn');
+const supportUpdateMessage = document.getElementById('supportUpdateMessage');
+
+let selectedSupportRequestId = null;
 
 let supportRequestsCache = [];
 
