@@ -113,6 +113,23 @@ const referralDetailsPanel = document.getElementById('referralDetailsPanel');
 const referralDetailsContent = document.getElementById('referralDetailsContent');
 
 let referralsCache = [];
+// ------------------------------------------------------
+// WINNERS MANAGEMENT ELEMENTS
+// ------------------------------------------------------
+
+const winnersMessage = document.getElementById('winnersMessage');
+const winnerPeriodInput = document.getElementById('winnerPeriodInput');
+
+const winnersLeaderboardBody = document.getElementById('winnersLeaderboardBody');
+const previousWinnersTableBody = document.getElementById('previousWinnersTableBody');
+
+const totalWinners = document.getElementById('totalWinners');
+const pendingWinners = document.getElementById('pendingWinners');
+const confirmedWinners = document.getElementById('confirmedWinners');
+const deliveredWinners = document.getElementById('deliveredWinners');
+
+let winnersLeaderboardCache = [];
+let previousWinnersCache = [];
 
 // CHALLENGE RESULTS ELEMENTS
 const resultsTableBody = document.getElementById('resultsTableBody');
