@@ -131,6 +131,25 @@ const deliveredWinners = document.getElementById('deliveredWinners');
 let winnersLeaderboardCache = [];
 let previousWinnersCache = [];
 
+// ------------------------------------------------------
+// CUSTOMER SUPPORT MANAGEMENT ELEMENTS
+// ------------------------------------------------------
+
+const supportMessage = document.getElementById('supportMessage');
+const supportTableBody = document.getElementById('supportTableBody');
+const supportSearch = document.getElementById('supportSearch');
+const supportStatusFilter = document.getElementById('supportStatusFilter');
+
+const totalSupportRequests = document.getElementById('totalSupportRequests');
+const openSupportRequests = document.getElementById('openSupportRequests');
+const inProgressSupportRequests = document.getElementById('inProgressSupportRequests');
+const resolvedSupportRequests = document.getElementById('resolvedSupportRequests');
+
+const supportDetailsPanel = document.getElementById('supportDetailsPanel');
+const supportDetailsContent = document.getElementById('supportDetailsContent');
+
+let supportRequestsCache = [];
+
 // CHALLENGE RESULTS ELEMENTS
 const resultsTableBody = document.getElementById('resultsTableBody');
 const resultsMessage = document.getElementById('resultsMessage');
