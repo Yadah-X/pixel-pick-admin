@@ -502,6 +502,9 @@ if (section === 'entries' && currentAdmin) {
   if (section === 'winners' && currentAdmin) {
   loadAdminWinners();
 }
+  if (section === 'support' && currentAdmin) {
+  loadAdminSupport();
+}
 }
 
 document.querySelectorAll('.nav-link').forEach(link => {
