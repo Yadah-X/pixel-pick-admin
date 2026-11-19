@@ -100,6 +100,20 @@ const customersPausedCount = document.getElementById('customersPausedCount');
 
 let customersCache = [];
 
+const referralsTableBody = document.getElementById('referralsTableBody');
+const referralsMessage = document.getElementById('referralsMessage');
+const referralSearch = document.getElementById('referralSearch');
+
+const totalReferrals = document.getElementById('totalReferrals');
+const qualifiedReferrals = document.getElementById('qualifiedReferrals');
+const rewardsIssued = document.getElementById('rewardsIssued');
+const rewardsRedeemed = document.getElementById('rewardsRedeemed');
+
+const referralDetailsPanel = document.getElementById('referralDetailsPanel');
+const referralDetailsContent = document.getElementById('referralDetailsContent');
+
+let referralsCache = [];
+
 // CHALLENGE RESULTS ELEMENTS
 const resultsTableBody = document.getElementById('resultsTableBody');
 const resultsMessage = document.getElementById('resultsMessage');
