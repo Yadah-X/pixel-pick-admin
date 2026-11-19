@@ -1487,6 +1487,92 @@ async function loadAdminReferrals() {
   );
 }
 
+// Render referral activity table
+function renderAdminReferrals() {
+  if (!referralsTableBody) return;
+
+  const searchTerm = (referralSearch?.value || '')
+    .trim()
+    .toLowerCase();
+
+  const filteredReferrals = referralsCache.filter(referral => {
+    const referrer = referral.referrer || {};
+    const referred = referral.referred || {};
+
+    const searchableText = [
+      referral.referral_code,
+      referral.status,
+      referrer.first_name,
+      referrer.last_name,
+      referrer.email,
+      referred.first_name,
+      referred.last_name,
+      referred.email
+    ].join(' ').toLowerCase();
+
+    return searchableText.includes(searchTerm);
+  });
+
+  if (!filteredReferrals.length) {
+    referralsTableBody.innerHTML = `
+      <tr>
+        <td colspan="6" class="empty-state">
+          No referral records found.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  referralsTableBody.innerHTML = filteredReferrals.map(referral => {
+    const referrer = referral.referrer || {};
+    const referred = referral.referred || {};
+
+    const referrerName = [
+      referrer.first_name,
+      referrer.last_name
+    ].filter(Boolean).join(' ') || 'Unknown customer';
+
+    const referredName = [
+      referred.first_name,
+      referred.last_name
+    ].filter(Boolean).join(' ') || 'Unknown customer';
+
+    const status = referral.status || 'Unknown';
+
+    return `
+      <tr>
+        <td>${escapeHtml(referral.referral_code || '—')}</td>
+        <td>
+          ${escapeHtml(referrerName)}
+          <br>
+          <small>${escapeHtml(referrer.email || '')}</small>
+        </td>
+        <td>
+          ${escapeHtml(referredName)}
+          <br>
+          <small>${escapeHtml(referred.email || '')}</small>
+        </td>
+        <td>
+          <span class="status-badge">
+            ${escapeHtml(status)}
+          </span>
+        </td>
+        <td>${escapeHtml(formatDate(referral.created_at))}</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-referral-id="${escapeHtml(referral.id)}"
+          >
+            View details
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
 
 // Update customer summary cards
 function updateCustomersStatistics() {
