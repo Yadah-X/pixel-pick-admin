@@ -1576,6 +1576,87 @@ function renderAdminReferrals() {
   }).join('');
 }
 
+// Display full referral details
+function showReferralDetails(referralId) {
+  const referral = referralsCache.find(
+    item => item.id === referralId
+  );
+
+  if (!referral) return;
+
+  const referrer = referral.referrer || {};
+  const referred = referral.referred || {};
+  const rewards = referral.rewards || [];
+
+  const customerName = customer => {
+    return [
+      customer.first_name,
+      customer.last_name
+    ].filter(Boolean).join(' ') || 'Unknown customer';
+  };
+
+  const rewardDetails = rewards.length
+    ? rewards.map(reward => `
+        <div class="detail-item">
+          <strong>Reward status:</strong>
+          ${escapeHtml(reward.status || 'Unknown')}
+          <br>
+          <strong>Created:</strong>
+          ${escapeHtml(reward.created_at ? formatDate(reward.created_at) : '—')}
+          <br>
+          <strong>Expires:</strong>
+          ${escapeHtml(reward.expires_at ? formatDate(reward.expires_at) : '—')}
+          <br>
+          <strong>Redeemed:</strong>
+          ${escapeHtml(reward.redeemed_at ? formatDate(reward.redeemed_at) : '—')}
+        </div>
+      `).join('')
+    : '<p>No rewards recorded for this referral.</p>';
+
+  referralDetailsContent.innerHTML = `
+    <div class="detail-item">
+      <h4>Referral information</h4>
+      <p><strong>Referral code:</strong> ${escapeHtml(referral.referral_code || '—')}</p>
+      <p><strong>Status:</strong> ${escapeHtml(referral.status || 'Unknown')}</p>
+      <p><strong>Created:</strong> ${escapeHtml(referral.created_at ? formatDate(referral.created_at) : '—')}</p>
+      <p><strong>Qualified:</strong> ${escapeHtml(referral.qualified_at ? formatDate(referral.qualified_at) : '—')}</p>
+    </div>
+
+    <div class="detail-item">
+      <h4>Referring customer</h4>
+      <p><strong>Name:</strong> ${escapeHtml(customerName(referrer))}</p>
+      <p><strong>Email:</strong> ${escapeHtml(referrer.email || '—')}</p>
+    </div>
+
+    <div class="detail-item">
+      <h4>Referred customer</h4>
+      <p><strong>Name:</strong> ${escapeHtml(customerName(referred))}</p>
+      <p><strong>Email:</strong> ${escapeHtml(referred.email || '—')}</p>
+    </div>
+
+    <div class="detail-item">
+      <h4>Referral rewards</h4>
+      ${rewardDetails}
+    </div>
+  `;
+
+  referralDetailsPanel.classList.remove('hidden');
+
+  referralDetailsPanel.scrollIntoView({
+    behavior: 'smooth',
+    block: 'start'
+  });
+}
+
+// Handle referral detail button clicks
+referralsTableBody.addEventListener('click', event => {
+  const button = event.target.closest('[data-referral-id]');
+
+  if (!button) return;
+
+  showReferralDetails(button.dataset.referralId);
+});
+
 
 // Update customer summary cards
 function updateCustomersStatistics() {
