@@ -556,3 +556,8 @@ td strong {
     padding: 18px;
   }
 }
+/* Success messages */
+.success {
+  color: #16a34a !important;
+  font-weight: 600;
+}
