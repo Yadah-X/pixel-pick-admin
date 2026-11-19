@@ -679,9 +679,122 @@
 
 </section>
 
-      <section id="section-winners" class="page-section hidden">
-        <div class="panel"><h2>Winners</h2><p>This section will be connected in the next development stage.</p></div>
-      </section>
+      
+<section id="section-winners" class="page-section hidden">
+
+  <div class="page-header">
+    <div>
+      <h2>Winners</h2>
+      <p>Review monthly competition results and select the overall Pixel Pick winner.</p>
+    </div>
+    <button id="refreshWinnersBtn" class="btn btn-primary">
+      Refresh
+    </button>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3>Total winners</h3>
+      <p id="totalWinners">0</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Pending confirmation</h3>
+      <p id="pendingWinners">0</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Confirmed winners</h3>
+      <p id="confirmedWinners">0</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Prizes delivered</h3>
+      <p id="deliveredWinners">0</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <div>
+        <h3>Monthly winner selection</h3>
+        <p>Select a monthly period to view the combined leaderboard.</p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="winnerPeriodInput">Monthly period start</label>
+      <input
+        type="date"
+        id="winnerPeriodInput"
+      >
+    </div>
+
+    <button
+      type="button"
+      id="loadWinnerLeaderboardBtn"
+      class="btn btn-primary"
+    >
+      Load leaderboard
+    </button>
+
+    <div id="winnersMessage"></div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Customer</th>
+            <th>Competition</th>
+            <th>Entry</th>
+            <th>Score</th>
+            <th>Accuracy</th>
+            <th>Completion time</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody id="winnersLeaderboardBody">
+          <tr>
+            <td colspan="8">
+              Select a monthly period to load the leaderboard.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Previous winners</h3>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Period</th>
+            <th>Winner</th>
+            <th>Competition</th>
+            <th>Score</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody id="previousWinnersTableBody">
+          <tr>
+            <td colspan="6">
+              Previous winners will appear here.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</section>
+
       <section id="section-support" class="page-section hidden">
         <div class="panel"><h2>Customer support</h2><p>This section will be connected in the next development stage.</p></div>
       </section>
