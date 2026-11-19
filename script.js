@@ -1873,6 +1873,7 @@ async function loadAdminSupport() {
 }
 
 
+
 // Render support request table
 function renderAdminSupport() {
   if (!supportTableBody) return;
@@ -1887,6 +1888,7 @@ function renderAdminSupport() {
     ].filter(Boolean).join(' ');
 
     const searchText = [
+      request.ticket_number,
       customerName,
       request.email,
       request.topic,
@@ -1916,7 +1918,7 @@ function renderAdminSupport() {
   if (!filteredRequests.length) {
     supportTableBody.innerHTML = `
       <tr>
-        <td colspan="6" class="empty-state">
+        <td colspan="7" class="empty-state">
           No matching support requests found.
         </td>
       </tr>
@@ -1932,6 +1934,7 @@ function renderAdminSupport() {
 
     return `
       <tr>
+        <td><strong>#${escapeHtml(request.ticket_number)}</strong></td>
         <td>${escapeHtml(customerName)}</td>
         <td>${escapeHtml(request.email)}</td>
         <td>${escapeHtml(request.topic)}</td>
