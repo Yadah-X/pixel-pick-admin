@@ -599,9 +599,86 @@
 
 </section>
 
-      <section id="section-referrals" class="page-section hidden">
-        <div class="panel"><h2>Referrals</h2><p>This section will be connected in the next development stage.</p></div>
-      </section>
+      
+<section id="section-referrals" class="page-section hidden">
+
+  <div class="page-header">
+    <div>
+      <h2>Referrals</h2>
+      <p>Monitor customer referrals and referral rewards.</p>
+    </div>
+    <button id="refreshReferralsBtn" class="btn btn-primary">
+      Refresh
+    </button>
+  </div>
+
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <h3>Total referrals</h3>
+      <p id="totalReferrals">0</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Qualified referrals</h3>
+      <p id="qualifiedReferrals">0</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Rewards issued</h3>
+      <p id="rewardsIssued">0</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Rewards redeemed</h3>
+      <p id="rewardsRedeemed">0</p>
+    </div>
+
+  </div>
+
+  <div class="panel">
+
+    <div class="panel-header">
+      <h3>Referral activity</h3>
+      <input
+        type="search"
+        id="referralSearch"
+        placeholder="Search customer, email or referral code..."
+      >
+    </div>
+
+    <div id="referralsMessage"></div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Referral code</th>
+            <th>Referrer</th>
+            <th>Referred customer</th>
+            <th>Status</th>
+            <th>Date created</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody id="referralsTableBody">
+          <tr>
+            <td colspan="6">Referral records will appear here.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div id="referralDetailsPanel" class="panel hidden">
+    <h3>Referral details</h3>
+    <div id="referralDetailsContent"></div>
+  </div>
+
+</section>
+
       <section id="section-winners" class="page-section hidden">
         <div class="panel"><h2>Winners</h2><p>This section will be connected in the next development stage.</p></div>
       </section>
