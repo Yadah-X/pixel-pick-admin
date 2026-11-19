@@ -1820,6 +1820,129 @@ function renderWinnerLeaderboard() {
     }).join('');
 }
 
+// ------------------------------------------------------
+// CUSTOMER SUPPORT MANAGEMENT
+// ------------------------------------------------------
+
+// Load support requests from Supabase
+async function loadAdminSupport() {
+  if (!currentAdmin) return;
+
+  supportTableBody.innerHTML =
+    '<tr><td colspan="6">Loading support requests...</td></tr>';
+
+  showMessage(supportMessage, '');
+
+  const { data, error } = await supabaseClient.rpc(
+    'get_admin_support_requests'
+  );
+
+  if (error) {
+    console.error('Support requests error:', error);
+
+    supportRequestsCache = [];
+
+    supportTableBody.innerHTML =
+      '<tr><td colspan="6">Could not load support requests.</td></tr>';
+
+    showMessage(
+      supportMessage,
+      error.message || 'Unable to load support requests.'
+    );
+
+    return;
+  }
+
+  supportRequestsCache = data || [];
+
+  renderAdminSupport();
+
+  showMessage(
+    supportMessage,
+    'Support requests loaded successfully.',
+    true
+  );
+}
+
+
+// Render support request table
+function renderAdminSupport() {
+  if (!supportTableBody) return;
+
+  const searchTerm = (supportSearch?.value || '').toLowerCase();
+  const selectedStatus = supportStatusFilter?.value || 'all';
+
+  const filteredRequests = supportRequestsCache.filter(request => {
+    const customerName = [
+      request.first_name,
+      request.last_name
+    ].filter(Boolean).join(' ');
+
+    const searchText = [
+      customerName,
+      request.email,
+      request.topic,
+      request.message
+    ].join(' ').toLowerCase();
+
+    const matchesSearch = searchText.includes(searchTerm);
+
+    const matchesStatus =
+      selectedStatus === 'all' ||
+      request.status === selectedStatus;
+
+    return matchesSearch && matchesStatus;
+  });
+
+  totalSupportRequests.textContent = supportRequestsCache.length;
+
+  openSupportRequests.textContent =
+    supportRequestsCache.filter(r => r.status === 'open').length;
+
+  inProgressSupportRequests.textContent =
+    supportRequestsCache.filter(r => r.status === 'in_progress').length;
+
+  resolvedSupportRequests.textContent =
+    supportRequestsCache.filter(r => r.status === 'resolved').length;
+
+  if (!filteredRequests.length) {
+    supportTableBody.innerHTML = `
+      <tr>
+        <td colspan="6" class="empty-state">
+          No matching support requests found.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  supportTableBody.innerHTML = filteredRequests.map(request => {
+    const customerName = [
+      request.first_name,
+      request.last_name
+    ].filter(Boolean).join(' ') || 'Unknown customer';
+
+    return `
+      <tr>
+        <td>${escapeHtml(customerName)}</td>
+        <td>${escapeHtml(request.email)}</td>
+        <td>${escapeHtml(request.topic)}</td>
+        <td>${escapeHtml(formatDate(request.created_at))}</td>
+        <td>${escapeHtml(request.status.replaceAll('_', ' '))}</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-view-support="${escapeHtml(request.request_id)}"
+          >
+            View
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
 // Render referral activity table
 function renderAdminReferrals() {
   if (!referralsTableBody) return;
