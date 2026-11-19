@@ -1567,6 +1567,106 @@ async function loadWinnerLeaderboard() {
   );
 }
 
+// Load Winners dashboard statistics and previous winners
+async function loadAdminWinners() {
+  if (!currentAdmin) return;
+
+  if (previousWinnersTableBody) {
+    previousWinnersTableBody.innerHTML =
+      '<tr><td colspan="6">Loading previous winners...</td></tr>';
+  }
+
+  showMessage(winnersMessage, '');
+
+  const { data, error } = await supabaseClient.rpc(
+    'get_admin_monthly_winners'
+  );
+
+  if (error) {
+    console.error('Admin winners error:', error);
+
+    previousWinnersCache = [];
+
+    if (previousWinnersTableBody) {
+      previousWinnersTableBody.innerHTML =
+        '<tr><td colspan="6">Could not load previous winners.</td></tr>';
+    }
+
+    showMessage(
+      winnersMessage,
+      error.message || 'Unable to load winners.'
+    );
+
+    return;
+  }
+
+  previousWinnersCache = data || [];
+
+  totalWinners.textContent = previousWinnersCache.length;
+
+  pendingWinners.textContent =
+    previousWinnersCache.filter(w => w.status === 'pending_confirmation').length;
+
+  confirmedWinners.textContent =
+    previousWinnersCache.filter(w => w.status === 'confirmed').length;
+
+  deliveredWinners.textContent =
+    previousWinnersCache.filter(w => w.status === 'delivered').length;
+
+  renderPreviousWinners();
+
+  showMessage(
+    winnersMessage,
+    'Winners dashboard loaded successfully.',
+    true
+  );
+}
+
+
+// Display previous winners
+function renderPreviousWinners() {
+  if (!previousWinnersTableBody) return;
+
+  if (!previousWinnersCache.length) {
+    previousWinnersTableBody.innerHTML = `
+      <tr>
+        <td colspan="6" class="empty-state">
+          No winners have been selected yet.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  previousWinnersTableBody.innerHTML =
+    previousWinnersCache.map(winner => {
+      const customerName = [
+        winner.first_name,
+        winner.last_name
+      ].filter(Boolean).join(' ') || 'Unknown customer';
+
+      return `
+        <tr>
+          <td>${escapeHtml(winner.monthly_period_start)}</td>
+
+          <td>
+            ${escapeHtml(customerName)}
+            <br>
+            <small>${escapeHtml(winner.email || '')}</small>
+          </td>
+
+          <td>${escapeHtml(winner.competition_name)}</td>
+
+          <td>${escapeHtml(winner.total_score)}</td>
+
+          <td>${escapeHtml(winner.status.replaceAll('_', ' '))}</td>
+
+          <td>${escapeHtml(formatDate(winner.selected_at))}</td>
+        </tr>
+      `;
+    }).join('');
+}
+
 
 // Display monthly leaderboard
 function renderWinnerLeaderboard() {
