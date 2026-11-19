@@ -2006,6 +2006,54 @@ function showSupportDetails(requestId) {
   });
 }
 
+async function updateAdminSupportStatus() {
+  if (!selectedSupportRequestId) {
+    showMessage(supportUpdateMessage, 'Please select a support request.');
+    return;
+  }
+
+  const newStatus = supportNewStatus.value;
+
+  updateSupportStatusBtn.disabled = true;
+  updateSupportStatusBtn.textContent = 'Updating...';
+
+  showMessage(supportUpdateMessage, 'Updating support request...');
+
+  try {
+    const { error } = await supabaseClient.rpc(
+      'update_admin_support_status',
+      {
+        p_request_id: selectedSupportRequestId,
+        p_status: newStatus
+      }
+    );
+
+    if (error) throw error;
+
+    showMessage(
+      supportUpdateMessage,
+      'Support request status updated successfully.',
+      true
+    );
+
+    await loadAdminSupport();
+
+    showSupportDetails(selectedSupportRequestId);
+
+  } catch (error) {
+    console.error('Support status update error:', error);
+
+    showMessage(
+      supportUpdateMessage,
+      error.message || 'Could not update support request status.'
+    );
+
+  } finally {
+    updateSupportStatusBtn.disabled = false;
+    updateSupportStatusBtn.textContent = 'Update status';
+  }
+}
+
 // Render referral activity table
 function renderAdminReferrals() {
   if (!referralsTableBody) return;
