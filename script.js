@@ -1622,6 +1622,79 @@ async function loadAdminWinners() {
   );
 }
 
+ // Select and save the monthly winner
+async function selectAdminMonthlyWinner(attemptId) {
+  if (!currentAdmin) return;
+
+  const period = winnerPeriodInput?.value;
+
+  if (!period) {
+    showMessage(winnersMessage, 'Please select a monthly period.');
+    return;
+  }
+
+  const winner = winnersLeaderboardCache.find(
+    item => item.attempt_id === attemptId
+  );
+
+  if (!winner) {
+    showMessage(winnersMessage, 'Winner details could not be found.');
+    return;
+  }
+
+  const customerName = [
+    winner.first_name,
+    winner.last_name
+  ].filter(Boolean).join(' ') || 'Unknown customer';
+
+  const completionTime =
+    (Number(winner.completion_time_ms) / 1000).toFixed(3);
+
+  const confirmation = window.confirm(
+    'CONFIRM MONTHLY WINNER SELECTION\n\n' +
+    'Customer: ' + customerName + '\n' +
+    'Email: ' + (winner.email || 'Not available') + '\n' +
+    'Competition: ' + winner.competition_name + '\n' +
+    'Entry number: ' + winner.entry_number + '\n' +
+    'Score: ' + winner.total_score + '\n' +
+    'Accuracy: ' + winner.accuracy + '%\n' +
+    'Completion time: ' + completionTime + ' seconds\n\n' +
+    'Are you sure you want to select this customer as the monthly winner?'
+  );
+
+  if (!confirmation) return;
+
+  showMessage(winnersMessage, 'Saving selected winner...');
+
+  const { data, error } = await supabaseClient.rpc(
+    'select_admin_monthly_winner',
+    {
+      p_monthly_period_start: period,
+      p_attempt_id: attemptId
+    }
+  );
+
+  if (error) {
+    console.error('Winner selection error:', error);
+
+    showMessage(
+      winnersMessage,
+      error.message || 'Could not save the selected winner.'
+    );
+
+    return;
+  }
+
+  await loadAdminWinners();
+  await loadWinnerLeaderboard();
+
+  showMessage(
+    winnersMessage,
+    'Winner selected successfully! Status: Pending confirmation.',
+    true
+  );
+}
+
 
 // Display previous winners
 function renderPreviousWinners() {
