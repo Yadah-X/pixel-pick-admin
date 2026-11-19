@@ -1943,6 +1943,61 @@ function renderAdminSupport() {
   }).join('');
 }
 
+// View individual customer support request
+function showSupportDetails(requestId) {
+  const request = supportRequestsCache.find(
+    item => item.request_id === requestId
+  );
+
+  if (!request) {
+    showMessage(supportMessage, 'Support request could not be found.');
+    return;
+  }
+
+  const customerName = [
+    request.first_name,
+    request.last_name
+  ].filter(Boolean).join(' ') || 'Unknown customer';
+
+  supportDetailsContent.innerHTML = `
+    <div class="detail-group">
+      <h4>Customer</h4>
+      <p>${escapeHtml(customerName)}</p>
+    </div>
+
+    <div class="detail-group">
+      <h4>Email address</h4>
+      <p>${escapeHtml(request.email)}</p>
+    </div>
+
+    <div class="detail-group">
+      <h4>Topic</h4>
+      <p>${escapeHtml(request.topic)}</p>
+    </div>
+
+    <div class="detail-group">
+      <h4>Message</h4>
+      <p style="white-space: pre-wrap;">${escapeHtml(request.message)}</p>
+    </div>
+
+    <div class="detail-group">
+      <h4>Status</h4>
+      <p>${escapeHtml(request.status.replaceAll('_', ' '))}</p>
+    </div>
+
+    <div class="detail-group">
+      <h4>Date submitted</h4>
+      <p>${escapeHtml(formatDate(request.created_at))}</p>
+    </div>
+  `;
+
+  supportDetailsPanel.hidden = false;
+  supportDetailsPanel.scrollIntoView({
+    behavior: 'smooth',
+    block: 'start'
+  });
+}
+
 // Render referral activity table
 function renderAdminReferrals() {
   if (!referralsTableBody) return;
