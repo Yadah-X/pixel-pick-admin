@@ -2057,7 +2057,13 @@ if (referralSearch) {
 // Refresh referrals
 document.getElementById('refreshReferralsBtn')
   ?.addEventListener('click', loadAdminReferrals);
+// Winners leaderboard button
+document.getElementById('loadWinnerLeaderboardBtn')
+  ?.addEventListener('click', loadWinnerLeaderboard);
 
+// Refresh winners leaderboard
+document.getElementById('refreshWinnersBtn')
+  ?.addEventListener('click', loadWinnerLeaderboard);
 
 // ==========================================
 // CHALLENGE RESULTS
