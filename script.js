@@ -1507,6 +1507,124 @@ async function loadAdminReferrals() {
   );
 }
 
+// ------------------------------------------------------
+// WINNERS MANAGEMENT
+// ------------------------------------------------------
+
+// Load monthly winner leaderboard from Supabase
+async function loadWinnerLeaderboard() {
+  if (!currentAdmin) return;
+
+  const period = winnerPeriodInput?.value;
+
+  if (!period) {
+    showMessage(
+      winnersMessage,
+      'Please select a monthly period.'
+    );
+    return;
+  }
+
+  winnersLeaderboardBody.innerHTML =
+    '<tr><td colspan="8">Loading leaderboard...</td></tr>';
+
+  showMessage(winnersMessage, '');
+
+  const { data, error } = await supabaseClient.rpc(
+    'get_admin_monthly_winner_leaderboard',
+    {
+      p_monthly_period_start: period
+    }
+  );
+
+  if (error) {
+    console.error('Winner leaderboard error:', error);
+
+    winnersLeaderboardCache = [];
+
+    winnersLeaderboardBody.innerHTML =
+      '<tr><td colspan="8">Could not load leaderboard.</td></tr>';
+
+    showMessage(
+      winnersMessage,
+      error.message || 'Unable to load monthly results.'
+    );
+
+    return;
+  }
+
+  winnersLeaderboardCache = data || [];
+
+  renderWinnerLeaderboard();
+
+  showMessage(
+    winnersMessage,
+    'Monthly leaderboard loaded successfully.',
+    true
+  );
+}
+
+
+// Display monthly leaderboard
+function renderWinnerLeaderboard() {
+  if (!winnersLeaderboardBody) return;
+
+  if (!winnersLeaderboardCache.length) {
+    winnersLeaderboardBody.innerHTML = `
+      <tr>
+        <td colspan="8" class="empty-state">
+          No eligible participants found for this monthly period.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  winnersLeaderboardBody.innerHTML =
+    winnersLeaderboardCache.map(winner => {
+      const customerName = [
+        winner.first_name,
+        winner.last_name
+      ].filter(Boolean).join(' ') || 'Unknown customer';
+
+      return `
+        <tr>
+          <td>${escapeHtml(winner.ranking_position)}</td>
+
+          <td>
+            ${escapeHtml(customerName)}
+            <br>
+            <small>${escapeHtml(winner.email || '')}</small>
+          </td>
+
+          <td>${escapeHtml(winner.competition_name)}</td>
+
+          <td>${escapeHtml(winner.entry_number)}</td>
+
+          <td>${escapeHtml(winner.total_score)}</td>
+
+          <td>${escapeHtml(winner.accuracy)}%</td>
+
+          <td>
+            ${escapeHtml(
+              (Number(winner.completion_time_ms) / 1000).toFixed(3)
+            )} sec
+          </td>
+
+          <td>
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-select-winner="${escapeHtml(winner.attempt_id)}"
+            >
+              Select winner
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+}
+
 // Render referral activity table
 function renderAdminReferrals() {
   if (!referralsTableBody) return;
