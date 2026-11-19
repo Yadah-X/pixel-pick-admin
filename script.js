@@ -480,6 +480,9 @@ if (section === 'entries' && currentAdmin) {
   if (section === 'referrals' && currentAdmin) {
   loadAdminReferrals();
 }
+  if (section === 'winners' && currentAdmin) {
+  loadAdminWinners();
+}
 }
 
 document.querySelectorAll('.nav-link').forEach(link => {
