@@ -2210,10 +2210,6 @@ function showReferralDetails(referralId) {
 
   referralDetailsPanel.classList.remove('hidden');
 
-  referralDetailsPanel.scrollIntoView({
-    behavior: 'smooth',
-    block: 'start'
-  });
 }
 
 // Handle referral detail button clicks
