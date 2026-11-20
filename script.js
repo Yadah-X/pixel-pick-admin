@@ -1954,9 +1954,11 @@ function renderAdminSupport() {
   }).join('');
 }
 
+
 // View individual customer support request
 function showSupportDetails(requestId) {
   selectedSupportRequestId = requestId;
+
   const request = supportRequestsCache.find(
     item => item.request_id === requestId
   );
@@ -2003,11 +2005,8 @@ function showSupportDetails(requestId) {
     </div>
   `;
 
-  supportDetailsPanel.hidden = false;
-  supportDetailsPanel.scrollIntoView({
-    behavior: 'smooth',
-    block: 'start'
-  });
+  supportNewStatus.value = request.status;
+  supportDetailsPanel.classList.remove('hidden');
 }
 
 async function updateAdminSupportStatus() {
