@@ -2878,6 +2878,18 @@ referralDetailsPanel.addEventListener('click', event => {
     referralDetailsPanel.classList.add('hidden');
   }
 });
+// Close customer support details modal
+document.getElementById('closeSupportDetailsButton')
+  .addEventListener('click', () => {
+    supportDetailsPanel.classList.add('hidden');
+  });
+
+// Close customer support modal when clicking outside
+supportDetailsPanel.addEventListener('click', event => {
+  if (event.target === supportDetailsPanel) {
+    supportDetailsPanel.classList.add('hidden');
+  }
+});
 // ------------------------------------------------------
 // INITIAL STARTUP
 // ------------------------------------------------------
