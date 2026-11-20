@@ -561,3 +561,23 @@ td strong {
   color: #16a34a !important;
   font-weight: 600;
 }
+/* CHALLENGE AND REFERRAL DETAILS MODALS */
+.details-modal-card {
+  width: min(1100px, 95%);
+  max-width: 1100px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.details-modal-card .table-wrap {
+  max-height: 60vh;
+  overflow: auto;
+}
+
+.details-modal-card .modal-heading {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 2;
+  padding-bottom: 15px;
+}
