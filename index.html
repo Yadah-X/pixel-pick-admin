@@ -549,12 +549,20 @@
 
   </div>
 
-  <!-- INDIVIDUAL ATTEMPT DETAILS -->
-  <div id="attemptDetailsPanel" class="panel hidden">
+  <!-- INDIVIDUAL ATTEMPT DETAILS MODAL -->
+<div
+  id="attemptDetailsPanel"
+  class="modal hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="attemptDetailsTitle"
+>
+  <div class="modal-card details-modal-card">
 
-    <div class="section-heading">
+    <div class="modal-heading">
       <div>
-        <h3>Individual challenge answers</h3>
+        <p class="eyebrow">CHALLENGE RESULTS</p>
+        <h2 id="attemptDetailsTitle">Individual challenge answers</h2>
         <p id="attemptDetailsSubtitle" class="muted">
           Select an attempt to view its answers.
         </p>
@@ -562,11 +570,10 @@
 
       <button
         id="closeAttemptDetailsButton"
-        class="secondary-button"
+        class="close-button"
         type="button"
-      >
-        Close details
-      </button>
+        aria-label="Close"
+      >×</button>
     </div>
 
     <p id="attemptDetailsMessage" class="message" role="status"></p>
@@ -596,7 +603,7 @@
     </div>
 
   </div>
-
+</div>
 </section>
 
       
