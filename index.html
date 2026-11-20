@@ -679,11 +679,34 @@
 
   </div>
 
-  <div id="referralDetailsPanel" class="panel hidden">
-    <h3>Referral details</h3>
-    <div id="referralDetailsContent"></div>
-  </div>
+  <!-- REFERRAL DETAILS MODAL -->
+<div
+  id="referralDetailsPanel"
+  class="modal hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="referralDetailsTitle"
+>
+  <div class="modal-card details-modal-card">
 
+    <div class="modal-heading">
+      <div>
+        <p class="eyebrow">REFERRAL INFORMATION</p>
+        <h2 id="referralDetailsTitle">Referral details</h2>
+      </div>
+
+      <button
+        id="closeReferralDetailsButton"
+        class="close-button"
+        type="button"
+        aria-label="Close"
+      >×</button>
+    </div>
+
+    <div id="referralDetailsContent"></div>
+
+  </div>
+</div>
 </section>
 
       
