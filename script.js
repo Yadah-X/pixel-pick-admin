@@ -2858,11 +2858,31 @@ resultsTableBody.addEventListener('click', event => {
   loadChallengeAttemptDetails(attemptId);
 });
 
-// Close individual answers
+// Close challenge answers modal
 document.getElementById('closeAttemptDetailsButton')
   .addEventListener('click', () => {
     attemptDetailsPanel.classList.add('hidden');
   });
+
+// Close challenge answers modal when clicking outside
+attemptDetailsPanel.addEventListener('click', event => {
+  if (event.target === attemptDetailsPanel) {
+    attemptDetailsPanel.classList.add('hidden');
+  }
+});
+
+// Close referral details modal
+document.getElementById('closeReferralDetailsButton')
+  .addEventListener('click', () => {
+    referralDetailsPanel.classList.add('hidden');
+  });
+
+// Close referral details modal when clicking outside
+referralDetailsPanel.addEventListener('click', event => {
+  if (event.target === referralDetailsPanel) {
+    referralDetailsPanel.classList.add('hidden');
+  }
+});
 // ------------------------------------------------------
 // INITIAL STARTUP
 // ------------------------------------------------------
